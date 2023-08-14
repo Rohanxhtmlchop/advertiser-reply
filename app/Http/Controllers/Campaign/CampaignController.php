@@ -56,6 +56,7 @@ class CampaignController extends Controller
             'campaign_payloads.total_unit as total_unit', 
             'status.name as status',
             'campaign_payloads.id as deal_auto_id',
+            'campaigns.show_data as show_data',
         ])->toArray();
         
         $campaignDayTableData = Helper::campaignDayTime( $campaignList, 'campaign_payloads' );
@@ -73,7 +74,7 @@ class CampaignController extends Controller
             'title' => 'Campaign',
             'tableTitle' => $campaignTableTitle,
             'dayTableData' => '',
-            'tableData' => CampaignController::campaignTableRecord(), 
+            'tableData' =>'', 
             'dealStatus' => $dealStatusArray,
             'dealView' => $dealViewArray,
         );
@@ -103,15 +104,19 @@ class CampaignController extends Controller
                 $campaignViewTableHtml .= '<tr class="tr-shadow">';
                     foreach( $tableDetailRowVal as $tableRowDetailKey => $tableRowDetail ){
                         if( $tableRowDetailKey == 'deal_auto_id' ) {
-                            $encryptId = base64_encode($tableDetailRowVal['campaign_id']);
-                            $path = '/campaign/edit/'.$encryptId;
-                            $campaignURL = url($path); 
-                            
-                            $campaignViewTableHtml .='<td>
-                                <a href="'.$campaignURL.'"><i class="fa fa-pencil-alt fa-lg"></i></a>
-                        </td>';
-                        }else {
-                            $campaignViewTableHtml .='<td class="'. $tableRowDetailKey .'">'. $tableRowDetail .'</td>';
+                            if( $tableDetailRowVal['show_data'] != 1 ){
+                                $encryptId = base64_encode($tableDetailRowVal['campaign_id']);
+                                $path = '/campaign/edit/'.$encryptId;
+                                $campaignURL = url($path); 
+                                
+                                $campaignViewTableHtml .='<td>
+                                    <a href="'.$campaignURL.'"><i class="fa fa-pencil-alt fa-lg"></i></a>
+                            </td>';
+                            } else{
+                                $campaignViewTableHtml .='<td></td>';
+                            }
+                        } else if( $tableRowDetailKey != 'show_data'){
+                            $campaignViewTableHtml .='<td class="1 '. $tableRowDetailKey .'">'. $tableRowDetail .'</td>';
                         }
                     }    
                     $campaignViewTableHtml .='</tr>';

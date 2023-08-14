@@ -1,6 +1,9 @@
 <?php 
 
 namespace App\Helpers;
+
+use App\Models\Advertiser;
+use App\Models\Brands;
 use App\Models\UserActivitiesLog;
 use Illuminate\Routing\Route;
 use Illuminate\Http\Request;
@@ -11,7 +14,10 @@ use App\Models\Deals;
 use App\Models\DealPayload;
 use App\Models\Campaigns;
 use App\Models\CampaignPayload;
+use App\Models\Medias;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class Helper{
     public static function activityLog( $message = null ){
@@ -324,6 +330,9 @@ class Helper{
             case "datetime":
                 $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="datetime" class="au-input au-input--full form-control json-datetime '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
                 break;
+            case "time":
+                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="time" class="au-input au-input--full form-control json-time '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
+                break;
             case "date":
                 $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="date" class="au-input au-input--full form-control json-year '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
                 break;
@@ -377,13 +386,13 @@ class Helper{
             case "deal":
                 $tableData = new Deals;
             break;
-            case "dealpayload":
+            case "deal_payloads":
                 $tableData = new DealPayload;
             break;
             case "campaign":
                 $tableData = new Campaigns;
             break;
-            case "campaignpayload":
+            case "campaign_payloads":
                 $tableData = new CampaignPayload;
             break;
         }
@@ -404,18 +413,18 @@ class Helper{
         $dealColumnsTypeList = Helper::getTableColumnType('deal',$dealColumnsList);
         $dealremoveArray = Helper::removeId($dealColumnsTypeList);
 
-        $dealpaylpadsColumnsList = Helper::getTableName('dealpayload')->getTableColumns();
-        $dealpaylpadsColumnsTypeList = Helper::getTableColumnType('dealpayload',$dealpaylpadsColumnsList);
+        $dealpaylpadsColumnsList = Helper::getTableName('deal_payloads')->getTableColumns();
+        $dealpaylpadsColumnsTypeList = Helper::getTableColumnType('deal_payloads',$dealpaylpadsColumnsList);
         $dealpaylpadsremoveArray = Helper::removeId($dealpaylpadsColumnsTypeList);
 
         $dealTableFields = array_merge($dealremoveArray,$dealpaylpadsremoveArray);
-        
-        $campaignColumnsList = Helper::getTableName('campaign')->getTableColumns();
+
+        $campaignColumnsList =  Helper::getTableName('campaign')->getTableColumns();
         $campaignColumnsTypeList = Helper::getTableColumnType('campaign',$campaignColumnsList);
         $campaignremoveArray = Helper::removeId($campaignColumnsTypeList);
 
-        $campaignpaylpadsColumnsList = Helper::getTableName('campaignpayload')->getTableColumns();
-        $campaignpaylpadsColumnsTypeList = Helper::getTableColumnType('campaignpayload',$campaignpaylpadsColumnsList);
+        $campaignpaylpadsColumnsList = Helper::getTableName('campaign_payloads')->getTableColumns();
+        $campaignpaylpadsColumnsTypeList = Helper::getTableColumnType('campaign_payloads',$campaignpaylpadsColumnsList);
         $campaignpaylpadsremoveArray = Helper::removeId($campaignpaylpadsColumnsTypeList);
 
         $campaignTableFields = array_merge($campaignremoveArray,$campaignpaylpadsremoveArray);
@@ -425,6 +434,170 @@ class Helper{
              'campaign' => $campaignTableFields,
             );
         return $tableFieldsData;
+    }
+
+    public static function jsonDataGetSpecificTableList($tableName){
+        $columnsList = Helper::getTableName($tableName)->getTableColumns();
+        $columnsTypeList = Helper::getTableColumnType($tableName,$columnsList);
+        $removeArray = Helper::removeId($columnsTypeList);
+        $columnArray = [];
+        foreach($columnsTypeList as $columnsTypeOfVal){
+            switch ($columnsTypeOfVal[0]) {
+                case "id":
+                    break;
+                default:
+                    $columnArray[] = $columnsTypeOfVal[0];
+            }
+        }
+        return $columnArray;
+    }
+    public static function tableOfFields($data){
+        $tableFields = [];
+        foreach( $data as $mappingKey => $mappingValue ){
+            $mappingKey = $mappingKey - 1;
+            if( ( $mappingValue['name'] == 'select_db_field[]') && ( $mappingValue['value'] != '' ) ){
+                if( array_key_exists($mappingValue['value'],$tableFields) ){
+                    $data = array( 'status' => 0 , 'message' => 'Please check Field Option already selected');
+                } else{
+                    $tableFields[$mappingValue['value']] =   $data[$mappingKey]['value'];
+                }
+            }
+        }
+        return $tableFields;
+    }
+
+    public static function addfieldsValue($fieldArray){
+        $userId = Session::get('login_user_id');
+        $currentDate = date('Y-m-d H:i:s');
+        $newFieldArray = [];
+        foreach($fieldArray as $fieldArrayKey => $fieldArrayVal) 
+        {
+            switch ($fieldArrayKey) {
+                case "delete":
+                    $newFieldArray['delete'] = 0;
+                break;
+                case "created_by":
+                    $newFieldArray['created_by'] = $userId;
+                break;
+                case "updated_by":
+                    $newFieldArray['updated_by'] = 0;
+                break;
+                case "updated_at":
+                    $newFieldArray['updated_at'] = $currentDate;
+                break;
+                case "created_at":
+                    $newFieldArray['created_at'] = $currentDate;
+                break;
+                case "status":
+                    $newFieldArray['status'] = 3;
+                break;
+                case "valid_from":
+                    $newFieldArray['valid_from'] =  date('Y-m-d h:m:s', strtotime($fieldArray['valid_from']));
+                break;
+                case "valid_to":
+                    $newFieldArray['valid_to'] =  date('Y-m-d h:m:s', strtotime($fieldArray['valid_to']));
+                break;
+                case "flight_start_date":
+                    $newFieldArray['flight_start_date'] =  date('Y-m-d h:m:s', strtotime($fieldArray['flight_start_date']));
+                break;
+                case "flight_end_date":
+                    $newFieldArray['flight_end_date'] =  date('Y-m-d h:m:s', strtotime($fieldArray['flight_end_date']));
+                break;
+                default:
+                    $newFieldArray[$fieldArrayKey] = $fieldArrayVal;
+            }
+        }
+        return $newFieldArray;
+    }
+    public static function checkStringOrNumber($fieldArray){
+        if(is_string($fieldArray)){
+            return true;
+        } else{
+            return false;
+        }
+    }
+    public static function getTableIdOrInsertedId($tableOfArray, $tableName){
+        if( count( $tableOfArray ) > 0 ){
+            if( $tableName == 'brands' ){
+                $getMediaData = DB::table($tableName)->where('client_id',$tableOfArray['client_id'])->where('product_name',$tableOfArray['product_name'])->first(['id']);
+            } else if( $tableName == 'outlets' ){
+                $getMediaData = DB::table($tableName)->where('client_id',$tableOfArray['client_id'])->where('outlet_type',$tableOfArray['outlet_type'])->first(['id']);
+            } else if( $tableName == 'deals' ){
+                $getMediaData = DB::table($tableName)->join('deal_payloads', 'deal_payloads.id', '=', 'deals.deal_payload_id')->where('deal_payloads.name',$tableOfArray['name'])->where('deals.client_id',$tableOfArray['client_id'])->where('deals.advertiser_id',$tableOfArray['advertiser_id'])->first(['deals.id']);
+            } else {
+                $getMediaData = DB::table($tableName)->where('client_id',$tableOfArray['client_id'])->where('name',$tableOfArray['name'])->first(['id']);
+            }
+            
+            if( $getMediaData == '' ){
+                $userId = Session::get('user_id');
+                $currentDate = date('Y-m-d H:i:s');
+                $arrayData = array(
+                    'status' => 1,
+                    'created_by' => $userId,
+                    'updated_by' => 0,
+                    'created_at' => $currentDate
+                );
+                $array = array_merge($tableOfArray,$arrayData);
+                $createMedia = DB::table($tableName)->insertGetId($array);
+                return $createMedia;
+            } else{
+              return $getMediaData->id;
+            }
+        }
+    }
+
+    public static function insertData($fieldArray){
+        $newData = [];
+        foreach($fieldArray as $fieldArrayKey => $fieldArrayVal) 
+        {
+            $checkStatus = Helper::checkStringOrNumber($fieldArrayVal);
+            if( $checkStatus ){
+                $tableFields = array('client_id' => $fieldArray['client_id'], 'name' => $fieldArrayVal);
+                switch ($fieldArrayKey) {
+                    case "media_id":
+                        $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableFields,'medias');
+                    break;
+                    case "brand_id":
+                        $advertiserId = Session::get('advertiser_id');
+                        $tableBrandFields = array('client_id' => $fieldArray['client_id'], 'product_name' => $fieldArrayVal, 'advertiser_id'=>$advertiserId);
+                        $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableBrandFields,'brands');
+                    break;
+                    case "outlet_id":
+                        $tableBrandFields = array('client_id' => $fieldArray['client_id'], 'outlet_type' => $fieldArrayVal);
+                        $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableBrandFields,'outlets');
+                    break;
+                    case "location_id":
+                        $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableFields,'locations');
+                    break;
+                    case "daypart_id":
+                        $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableFields,'day_parts');
+                    break;
+                    default:
+                        $fieldArray[$fieldArrayKey] = $fieldArrayVal;
+                }
+            } else{
+                $fieldArray[$fieldArrayKey] = $fieldArrayVal;
+            }
+        }
+
+        foreach($fieldArray as $fieldArrayKey => $fieldArrayVal) 
+        {
+            switch($fieldArrayKey){
+                case "demographic_id":
+                    $tableDemoGraphicField = array('client_id' => $fieldArray['client_id'], 'name' => $fieldArrayVal,'location_id' => $fieldArray['location_id'],'outlet_id' => $fieldArray['outlet_id'], 'primory' => 0 );
+                    $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableDemoGraphicField,'demographics');
+                break;
+                case "agency_id":
+                    $tableAgencyField = array('client_id' => $fieldArray['client_id'], 'name' => $fieldArrayVal, 'media_id' => $fieldArray['media_id'],'demographic_id' => $fieldArray['demographic_id'],'brand_id' => $fieldArray['brand_id'], 'outlet_id' =>$fieldArray['outlet_id']);
+                    $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableAgencyField,'agencys');
+                break;
+                case "deal_id":
+                    $tableAgencyField = array('client_id' => $fieldArray['client_id'], 'name' => $fieldArrayVal, 'media_id' => $fieldArray['media_id'],'advertiser_id' => $fieldArray['advertiser_id']);
+                    $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableAgencyField,'deals');
+                break;
+            }
+        }
+        return $fieldArray;
     }
 }
 ?>

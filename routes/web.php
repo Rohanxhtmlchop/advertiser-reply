@@ -74,3 +74,4 @@ Route::get('/no-page',[NoPageController::class, 'index'])->name('nopage')->middl
 Route::get('/api-insert',[JsonInsertDataController::class, 'index'])->name('api-insert')->middleware('auth'); 
 Route::post('/get-json-data',[JsonInsertDataController::class, 'getJSONData'])->name('getjsondata')->middleware('auth'); 
 Route::post('/json-mapping-data',[JsonInsertDataController::class, 'jsonMappingData'])->name('jsonMappingData')->middleware('auth'); 
+Route::post('/insert-json-data',[JsonInsertDataController::class, 'InsertjsonData'])->name('insertjsonData')->middleware('auth'); 

@@ -13,4 +13,10 @@ class DayParts extends Model
     public function getTableColumns() {
         return $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
     }
+
+    public function getTableTypes( $databaseTableFieldname = '') {
+        if( !empty( $databaseTableFieldname ) ){
+            return $this->getConnection()->getDoctrineColumn($this->getTable(), $databaseTableFieldname)->getType()->getName();
+        }
+    }
 }

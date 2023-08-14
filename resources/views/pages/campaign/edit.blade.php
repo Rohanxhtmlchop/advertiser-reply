@@ -232,6 +232,7 @@
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
                                                                     <input type="text" id="ad_length" class="au-input au-input--full form-control" name="ad_length" value="">
+                                                                    <input type="hidden" id="ad_length_old" class="au-input au-input--full form-control" name="ad_length_old" value="">
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -494,9 +495,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="btn-row mt-3 text-center">
-                                                        <a href="javascript:void(0);" class="btn btn-lg btn-secondary keep-original" attr-active="cpm-imp" >Keep Original</a>
+                                                        <a href="javascript:void(0);" class="btn btn-lg btn-secondary keep-original" attr-active="cpm-imp" >Discard Changes</a>
                                                         <a href="javascript:void(0);" class="btn btn-lg btn-secondary ml-md-3 tab-btn" attr-active="flighting" >Go To Flighting</a>
-                                                        <input type="submit" class="btn btn-lg btn-secondary ml-md-3" name="submit" id="submit" value="Send To Approval">
+                                                        <input type="submit" class="btn btn-lg btn-secondary ml-md-3 send-to-approval" name="submit" id="submit" value="Send To Approval" disabled>
                                                     </div>
                                                 </div>
                                             </div>

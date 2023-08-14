@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Medias extends Model
 {
     use HasFactory;
-    protected $fillable = [ 'name', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+    protected $fillable = [ 'name', 'client_id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 }

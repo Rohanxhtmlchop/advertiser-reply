@@ -19,6 +19,7 @@ $(document).ready(function(){
             type: 'POST',
             data: {_token: CSRF_TOKEN, data: dealStatus},
             success: function(response){
+                
                 $('#campaign_table').DataTable().destroy();
                 $('#campaign_view_body').empty().append(response.deal_table_html);
                 $('#campaign_table').DataTable({
@@ -151,6 +152,7 @@ $(document).ready(function(){
                         dataValue('input[name="deal_payloads_name"]', campaignArrayData.deal_payloads_name );
                         dataValue('input[name="demo_name"]', campaignArrayData.demographics_name)
                         dataValue('input[name="ad_length"]', campaignArrayData.inventory_length)
+                        dataValue('input[name="ad_length_old"]', campaignArrayData.inventory_length)
                         $('input[name="ad_length"]').daterangepicker({
                             timePicker : true,
                             singleDatePicker:true,
@@ -208,19 +210,19 @@ $(document).ready(function(){
                         })
                         $('.cpm-imp-tab #demographic_name').change(function(){
                             var demoName =  $(this).find('option:selected').text()
-                            dataAppend('#summary .demo_name', demoName, 1);
+                            dataAppend('#summary .demo_name', demoName, 1, campaignArrayData.demographics_name);
                         });
                         $('.cpm-imp-tab input[name="cpm_ipm_impressions"]').change(function(){
-                            dataAppend('#summary .impressions', $(this).val(), 1);
+                            dataAppend('#summary .impressions', $(this).val(), 1, campaignArrayData.impressions);
                         });
                         $('.cpm-imp-tab input[name="cpm_ipm_cpm"]').change(function(){
-                            dataAppend('#summary .cpm', $(this).val(), 1);
+                            dataAppend('#summary .cpm', $(this).val(), 1, campaignArrayData.cpm);
                         });
                         $('.cpm-imp-tab input[name="cpm_ipm_demo_population"]').change(function(){
-                            dataAppend('#summary .demo_population', $(this).val(), 1);
+                            dataAppend('#summary .demo_population', $(this).val(), 1, campaignArrayData.demo_population);
                         });
-                        $('.cpm-imp-tab input[name="cpm_ipm_grp"]').change(function(){
-                            dataAppend('#summary .grp', $(this).val(), 1);
+                        $('.cpm-imp-tab input[name="cpm_ipm_grp"]').change(function(){ 
+                            dataAppend('#summary .grp', $(this).val(), 1, campaignArrayData.grp);
                         });
                         /* Step 2 End */
 
@@ -262,8 +264,6 @@ $(document).ready(function(){
                         /* Step 3 End */
                         
                         /* Step 4 Summary */
-                        
-                        
                         dataAppend('#summary .demo_name', campaignArrayData.demographics_name);
                         dataAppend('#summary .ae_name', campaignArrayData.ae);
                         dataAppend('#summary .outlet_name', campaignArrayData.outlets_name);
@@ -318,21 +318,22 @@ $(document).ready(function(){
 */
     $('input[name="ad_length"]').on('apply.daterangepicker', function(){
         var startDate = $(this).val(); 
-        dataAppend('#new_campaign_table .new-campaign-inv-length', startDate,1);
+        var adLengthOld = $('#ad_length_old').val(); 
+        dataAppend('#new_campaign_table .new-campaign-inv-length', startDate,1, adLengthOld);
     });
     /** Flight Change Event  */
     $('#flight_start_date').on('apply.daterangepicker', function(){
         var startDate = $(this).val(); 
         $('#summary .new-flight-stat-date-text').empty().text(startDate);
-        $('#summary .new-flight-stat-date-text').addClass('bg-active');
-        dataAppend('#new_campaign_table .new-campaign-start-flight-date', startDate,1);
+        var campaignFlightStartDate = $('#campaign_flight_start_date').val();
+        dataAppend('#new_campaign_table .new-campaign-start-flight-date', startDate,1, campaignFlightStartDate);
     });
 
     $('#flight_end_date').on('apply.daterangepicker', function(){
         var endDate = $(this).val();
         $('#summary .new-flight-end-date-text').empty().text(endDate);
-        $('#summary .new-flight-end-date-text').addClass('bg-active');
-        dataAppend('#new_campaign_table .new-campaign-end-flight-date', endDate,1);
+        var campaignFlightEndDate = $('#campaign_flight_end_date').val();
+        dataAppend('#new_campaign_table .new-campaign-end-flight-date', endDate,1,campaignFlightEndDate);
     });
     $('#edit_flight .day-split-checkbox-list .number-field input[type="number"]').change(function(){
         var getDayOfSplit = $(this).val(); 
@@ -357,11 +358,13 @@ $(document).ready(function(){
         }
     });
     $('input[name="days[]"]').change(function(){
+        $('.send-to-approval').prop("disabled", false);
         var dayTimeVal = $('#campaign_day_time').val();
         changeDetailNewTable(dayTimeVal,1)
     });
     
     $('select:input[name="day_parts_id"]').change(function(){
+        $('.send-to-approval').prop("disabled", false);
         var dayPartVal = $(this).find('option:selected').text();
         changeDetailNewTable(dayPartVal,1)
     });
@@ -391,10 +394,10 @@ $(document).ready(function(){
                     link.setAttribute('href', URL+'/storage/app/public/campaign/'+fileName+'.json');
                     link.setAttribute('download', fileName+'.json'); // Need to modify filename ...
                     link.click();
-                    /*setTimeout(function(){
-                        window.location.href = URL+'/campaign';
+                    setTimeout(function(){
+                        window.location.href = URL+'';
                     },3000)
-                    return true;*/
+                    return true;
                 }
             });
         }

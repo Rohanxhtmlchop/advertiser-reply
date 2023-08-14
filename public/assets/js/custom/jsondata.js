@@ -10,31 +10,33 @@ $(document).ready(function () {
     });
 
     $(".next-step").click(function (e) {
-        var parentId = $(this).parent().parent().parent().attr('id');
+        var parentId = $(this).parent().parent().parent().parent().attr('id');
         if( parentId == 'upload'){
             var flag = 1;
             var tableListLength = $('#table_list').find(":selected").val();
             var jsonUploadfile = $('#json_file').prop('files').length;
-            if( jsonUploadfile == '' ){
+            console.log( jsonUploadfile );
+            if( jsonUploadfile == 0 ){
                 flag = 0;
                 addErrorMessage('json_file','Please Upload JSON file.')
-            } else {
+            } else if(jsonUploadfile != 0 ){
                 if( $('#json_file').prop('files')[0]['type'] != 'application/json' ){
                     flag = 0;
                     addErrorMessage('json_file','Please Upload only JSON file format.');
-                } else {
-                    flag = 1;
+                } else{
                     addErrorMessage('json_file','');
+                    if( tableListLength == '' ){
+                        flag = 0;
+                        addErrorMessage('table_list','Please select Any one Option.');
+                    } else {
+                        flag = 1;
+                    } 
                 }
-            } 
+            }   
             
-            if( ( tableListLength == 0 ) ){
-                flag = 0;
-                addErrorMessage('table_list','Please select Any one Option.');
-            }
-             
+            
             if( flag == 1 ){
-               
+                addErrorMessage('table_list','');
                 var data = new FormData();
                 var form_data = $('#json_add_data_form').serializeArray();
                 $.each(form_data, function (key, input) {
@@ -47,6 +49,9 @@ $(document).ready(function () {
                 }
                 data.append('_token',CSRF_TOKEN);
                 data.append('key', 'value');
+                var parentData = $(this).parent();
+                parentData.find('span.spinner').show();
+                $(this).prop('disabled',true);
                 $.ajax({
                     url: URL+"/get-json-data",
                     method: "post",
@@ -56,9 +61,9 @@ $(document).ready(function () {
                     data: data,
                     cache: false,
                     success: function (response) {
-                        console.log(1)
                         $('#db_fields_mapping').empty().append(response);
-
+                        parentData.find('span.spinner').hide();
+                        $(this).prop('disabled',false);
                         setTimeout(function(){
                             $('#db_fields_mapping .col-md-12').each(function(){
                                 if( $(this).find('.col-md-4 .form-control').hasClass('json-datetime') ){
@@ -83,6 +88,21 @@ $(document).ready(function () {
                                         format: "yyyy",
                                         viewMode: "years",
                                         minViewMode: "years"
+                                    });
+                                }
+
+                                if($(this).find('.col-md-4 .form-control').hasClass('json-time')){
+                                    var dateId = $(this).find('.col-md-4 .json-time').attr('id');
+                                    $('#'+dateId).daterangepicker({
+                                        timePicker : true,
+                                        singleDatePicker:true,
+                                        timePicker24Hour : true,
+                                        timePickerIncrement : 1,
+                                        timePickerSeconds : true,
+                                        locale : {
+                                            format : 'HH:mm:ss'
+                                    }}, (from_date) => {
+                                        $('#'+dateId).val(from_date.format('HH:mm:ss'));
                                     });
                                 }
                             });
@@ -117,6 +137,8 @@ $(document).ready(function () {
                 }
             });
             if( mappingFlag == true ){
+                var parentData = $(this).parent();
+                parentData.find('span.spinner').show();
                 var formData = $('form').serializeArray();
                 var url = URL+'/json-mapping-data';
                 $.ajax({
@@ -124,6 +146,7 @@ $(document).ready(function () {
                     type: 'POST',
                     data: {_token: CSRF_TOKEN, data: formData },
                     success: function(response){
+                        parentData.find('span.spinner').hide();
                         if( response.status == 0 ){
                             errorNotification( response.message )
                             return false;
@@ -141,6 +164,28 @@ $(document).ready(function () {
             } else {
                 return false;
             }
+        } else if( parentId == 'preview') {
+            var parentData = $(this).parent();
+            parentData.find('span.spinner').show();
+            var formData = $('form').serializeArray();
+                var url = URL+'/insert-json-data';
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {_token: CSRF_TOKEN, data: formData },
+                    success: function(response){
+                        parentData.find('span.spinner').hide();
+                        if( response.status == 1 ){
+                            sucessNotification(response.message)
+                            setTimeout( function() {window.location.href = URL+'/campaign'; },1000 );
+                            return true;
+                        } else {
+                            errorNotification(response.message);
+                            return false;
+                        }
+                    }
+                });
+            return false;
         } else {
             var active = $('.wizard .nav-tabs li.active');
             active.next().removeClass('disabled');

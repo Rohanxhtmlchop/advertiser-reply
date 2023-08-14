@@ -67,25 +67,7 @@
                                             @endforeach    
                                         </tr>
                                     </thead>
-                                    <tbody id="campaign_view_body">
-                                        @foreach( $tableData as $tableDetailRowKey => $tableDetailRowVal )
-                                            <tr class="tr-shadow">
-                                                @foreach( $tableDetailRowVal as $tableRowDetailKey => $tableRowDetailVal )
-                                                    @if( $tableRowDetailKey == 'deal_auto_id' )
-                                                    @php 
-                                                        $campaignId = base64_encode( $tableDetailRowVal['campaign_id'] );
-                                                        $url = url('/campaign/edit/'. $campaignId);
-                                                    @endphp
-                                                    <td>
-                                                        <a href="{{ $url }}"><i class="fa fa-pencil-alt fa-lg"></i></a>
-                                                    </td>
-                                                    @else
-                                                        <td key="{{ $tableRowDetailKey }}">{{ $tableRowDetailVal }}</td>    
-                                                    @endif
-                                                @endforeach    
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
+                                    <tbody id="campaign_view_body"></tbody>
                                 </table>
                             </div>
                             <!-- <div class="head d-flex justify-content-center align-items-center mb-4">

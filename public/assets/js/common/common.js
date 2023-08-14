@@ -29,10 +29,14 @@ function checkedCheckbox( fieldName, fieldValue ){
   }
 }
 
-function dataAppend( fieldName, fieldValue, flag = 0 ){
-  $(fieldName).empty().append(fieldValue);
+function dataAppend( fieldClass, fieldValue, flag = 0, fieldName = '' ){
+  $(fieldClass).empty().append(fieldValue);
   if( flag == 1 ){
-    $(fieldName).addClass('bg-active');
+    $('.send-to-approval').prop("disabled", false);
+    $(fieldClass).addClass('bg-active');
+  }
+  if( ( fieldName != '' ) && ( fieldValue ==  fieldName ) ){
+    $(fieldClass).removeClass('bg-active');
   }
 }
 
@@ -62,7 +66,7 @@ function errorNotification( message ){
 
 function addErrorMessage(name, message){
     var errorMessageDiv = '<label class="error invalid-feedback" for="'+name+'">'+message+'</label>';
-    $('#'+name).parent().find('.error').empty();
+    $('#'+name).parent().find('label.error').empty();
     if( message != '' ){
         $('#'+name).parent().append(errorMessageDiv);
     }

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Helpers\Helper;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class DealController extends Controller
 {
@@ -112,6 +113,8 @@ class DealController extends Controller
                 foreach( $tableDetailRowVal as $tableRowDetailKey => $tableRowDetail ){
                     if(  $tableRowDetailKey == 'day_time' ){
                         $dealViewTableHtml .='<td class="'.  $tableRowDetailKey .'">'. $dealViewTable['dayTableData'][$key] . $tableRowDetail .'</td>';
+                    } else if(  $tableRowDetailKey == 'campaign_number' ){
+                        $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'"><a href="'. URL::to('/campaign/edit/'.base64_encode($tableRowDetail)) .'">'. $tableRowDetail .'</a></td>';
                     } else {
                         $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'">'. $tableRowDetail .'</td>';
                     }

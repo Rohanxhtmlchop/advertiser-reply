@@ -78,7 +78,7 @@ text-align: center;width: 60px;height: 60px;color: #ffffff;}
 .custom-table tbody td{font-weight: 400;vertical-align: middle;padding: 10px;}
 .custom-table tr th, .custom-table tr td{font-size: 12px;padding: 10px 5px;box-shadow: none !important;text-align: center !important;}
 .flight-range{ column-gap: 10px; }
-.flight-range.select{position: absolute;top: 20px;right: 20px;}
+.flight-range.select{position: absolute;top: 20px;right: 20px;z-index: 1;}
 .card .dataTables_wrapper .row{margin-top: 10px !important;}
 div.dataTables_wrapper div.dataTables_length select{margin: 0 10px;}
 .table-striped tbody tr:nth-of-type(odd) {background-color: rgba(0,0,0,.10) !important;}
@@ -110,8 +110,8 @@ table.dataTable.table-striped>tbody>tr>td{ vertical-align: middle;}
 .pagination li:hover:not(.active) a {background-color: #d7e0b1;}
 .btn{font-size: 1rem;-webkit-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.20) !important;-moz-box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.20) !important;
   box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.20) !important;-webkit-transition: ease-out 0.3s;-moz-transition: ease-out 0.3s;-o-transition: ease-out 0.3s;transition: ease-out 0.3s;}
-.btn-secondary {background: #a5c32a;color: #fff;border-color: transparent;-webkit-transition: ease-out 0.3s;-moz-transition: ease-out 0.3s;-o-transition: ease-out 0.3s;transition: ease-out 0.3s;}
-.btn-secondary.btn:hover, .btn-secondary.btn:focus {background: #84a10d;color: #ececec;border-color: transparent;}
+.btn-secondary, .wizard .next-step{background: #a5c32a;color: #fff;border-color: transparent;-webkit-transition: ease-out 0.3s;-moz-transition: ease-out 0.3s;-o-transition: ease-out 0.3s;transition: ease-out 0.3s;}
+.btn-secondary.btn:hover, .btn-secondary.btn:focus, .wizard .next-step:hover, .wizard .next-step:focus {background: #84a10d;color: #ececec;border-color: transparent;}
 .btn.focus, .btn:focus {outline: 0 !important;}
 .page-link:focus, .btn:focus, .form-check-input:focus{box-shadow: none;}
 .form-group .label, .form-group label{font-weight: 600;font-size: 14px;margin-bottom: 0px;display: block;}
@@ -157,7 +157,17 @@ transform: translate3d(0, -12px, 0) rotate(-90deg);top: -3px;}
 .campaign-edit .bg-active {background: #ffc10794; }
 input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; }
-
+.connecting-line{width: 70% !important;}
+.wizard .nav-tabs > li{width: 33.33% !important;}
+.wizard .nav-tabs > li a{margin: 0px !important;}
+.wizard .nav-tabs > li.active > a i{color: #a5c32a !important;}
+.wizard li.active span.round-tab{background: #a5c32a !important;border-color: #a5c32a !important;}
+.wizard input[type=file]{padding: 0 10px;}
+.wizard h4{margin-bottom: 30px;}
+.wizard{padding: 60px 30px 30px 30px;box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);margin-bottom: 0px;background: #ffffff;}
+.step-form-sec{display: flex;align-items: center;}
+.signup-step-container{padding: 30px 0px !important;}
+.step-form-sec .section__content{width: 100%;}
 @media (min-width: 1400px){
     .advertiser-view .head h2{width: calc(100% - 340px);padding-right: 5px;}
 }
@@ -240,12 +250,10 @@ input[type=number] { -moz-appearance: textfield; }
   .flight-range, .flight-range .daterange, .flight-range .daterange-input, .flight-range.select select{width: 100%;}
   .card .head .daterange input{min-width: 100%;}
   .card{padding: 15px;}
-  
   .deal-view-box .head{display: block !important;text-align: center;}
   .deal-view-box .head h2{margin-bottom: 15px !important;}
   .deal-view-sec .deal-view{row-gap: 15px;}
   .deal-view-sec .deal-view .col, .campaign-view-sec .deal-view .col{width: 50%;flex: 0 0 auto;}
-  
   div.table-responsive>div.dataTables_wrapper>div.row>div[class^=col-]:last-child{padding-right: calc(var(--bs-gutter-x) * .5);}
   .responsive-tabs .tab-content{width: 100%;}
   .card-header{border: none;background: #ffffff;}
@@ -262,6 +270,10 @@ input[type=number] { -moz-appearance: textfield; }
   .dataTables_filter{text-align: right !important;}
   .dataTables_filter input{max-width: 170px;}
   .dataTables_wrapper .col-sm-12{ width: 50% !important;}
+  .wizard label{margin-bottom: 10px;}
+  .wizard{padding: 60px 15px 30px 15px;}
+  .wizard ul.list-inline, .wizard ul.list-inline li, .wizard ul.list-inline li .btn{width: 100%;}
+  .wizard ul.list-inline li .btn{margin-top: 10px;}
 }
 @media (max-width: 575px) {
     .deal-view-sec .deal-view .col, .campaign-view-sec .deal-view .col{width: 100%;flex: 0 0 auto;}
