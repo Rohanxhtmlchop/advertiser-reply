@@ -34,84 +34,105 @@ class JsonInsertDataController extends Controller
         $tempFilePath= $request->file('json_file')[0]->getPathName();
         $data = file_get_contents($tempFilePath);
         $jsonFileFields = (array) json_decode($data);
-
         $removeArray = Helper::jsonDataTableList();
         $tableFieldsList = $removeArray[$tableName];
         $jsonHTML = '';
         if( count( $jsonFileFields ) > 0 ){
-            $fieldId = 1;
-            $jsonHTML .= '<div class="col-md-12">';
-                $jsonHTML .='<div class="row">';
-                    $jsonHTML .='<div class="col-md-4 form-group">';
-                        $jsonHTML .='<span><strong>Field Name</strong></span>';
-                    $jsonHTML .='</div>';  
-                    $jsonHTML .='<div class="col-md-4 form-group">';
-                        $jsonHTML .='<span><strong>Field Value</strong></span>';
-                    $jsonHTML .='</div>';
-                    $jsonHTML .='<div class="col-md-4 form-group">';
-                        $jsonHTML .='<span><strong>Mapping</strong></span>';
-                    $jsonHTML .='</div>';
-                $jsonHTML .='</div>';
-            $jsonHTML .='</div>';
-            $extraFields = array(
-                'advertiser_name' => Session::get('advertiser_id'),
-                'client_name' => Session::get('clients_id'),
-                'media_name' => Session::get('media_line'),
-            );
-            foreach( $extraFields as $extraFieldsKey => $extraFieldsValue ){
-                if( array_key_exists($extraFieldsKey, $tableFieldsList) ) {
-                    $jsonInput = Helper::getInput($tableFieldsList[$extraFieldsKey], $fieldId, $extraFieldsValue, 'field-exists');
-                } else {
-                    $jsonInput = Helper::getInput('bigint', $fieldId, $extraFieldsValue, 'field-not-exists');
-                }
-                $jsonHTML .= '<div class="col-md-12" style="display:none;">';
+            if( $jsonFileFields['name'] == $tableName ){
+                unset($jsonFileFields['name']);
+                $fieldId = 1;
+                $jsonHTML .= '<div class="col-md-6">';
                     $jsonHTML .='<div class="row">';
-                        $jsonHTML .='<div class="col-md-4 form-group">';
-                            $jsonHTML .= $jsonInput;
-                        $jsonHTML .='</div>';
-                        $jsonHTML .='<div class="col-md-4 form-group mapping">';
-                            $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid" aria-invalid="false">';
-                                $jsonHTML .='<option value="">Table Fields Option</option>';
-                                foreach($tableFieldsList as $tableFieldsListKey => $tableFieldsListVal ){
-                                    $selected  = ( $extraFieldsKey == $tableFieldsListKey )? 'selected="selected"':'';
-                                    $jsonHTML .='<option value="'.Helper::addUnderscore($tableFieldsListKey).'" attr-key="" '.$selected.'>'.Helper::removeUnderscore($tableFieldsListKey).'</option>';
-                                }
-                            $jsonHTML .= '</select>';
-                        $jsonHTML .='</div>';
-                    $jsonHTML .='</div>';
-                $jsonHTML .='</div>';
-            }
-            foreach( $jsonFileFields as $jsonFileFieldsKey => $jsonFileFieldsVal ){
-                if( array_key_exists($jsonFileFieldsKey, $tableFieldsList) ) {
-                    $jsonInput = Helper::getInput($tableFieldsList[$jsonFileFieldsKey], $fieldId, $jsonFileFieldsVal, 'field-exists');
-                } else {
-                    $jsonInput = Helper::getInput('bigint', $fieldId, $jsonFileFieldsVal, 'field-not-exists');
-                }
-                $jsonFieldNameRemoveUndersocde = Helper::removeUnderscore($jsonFileFieldsKey);
-                $jsonHTML .= '<div class="col-md-12">';
-                    $jsonHTML .='<div class="row">';
-                        $jsonHTML .='<div class="col-md-4 form-group">';
-                            $jsonHTML .='<span><strong>'.$jsonFieldNameRemoveUndersocde.'</strong></span>';
+                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                            $jsonHTML .='<span><strong>Field Name</strong></span>';
                         $jsonHTML .='</div>';  
-                        $jsonHTML .='<div class="col-md-4 form-group">';
-                            $jsonHTML .= $jsonInput;
+                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                            $jsonHTML .='<span><strong>Field Value</strong></span>';
                         $jsonHTML .='</div>';
-                        $jsonHTML .='<div class="col-md-4 form-group mapping">';
-                            $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid" aria-invalid="false">';
-                                $jsonHTML .='<option value="">Table Fields Option</option>';
-                                foreach($tableFieldsList as $tableFieldsListKey => $tableFieldsListVal ){
-                                    $selected  = ( $jsonFileFieldsKey == $tableFieldsListKey )? 'selected="selected"':'';
-                                    $jsonHTML .='<option value="'.Helper::addUnderscore($tableFieldsListKey).'" attr-key="" '.$selected.'>'.Helper::removeUnderscore($tableFieldsListKey).'</option>';
-                                }
-                            $jsonHTML .= '</select>';
+                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                            $jsonHTML .='<span><strong>Mapping</strong></span>';
                         $jsonHTML .='</div>';
                     $jsonHTML .='</div>';
                 $jsonHTML .='</div>';
-                $fieldId++;
+                $jsonHTML .= '<div class="col-md-6">';
+                    $jsonHTML .='<div class="row">';
+                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                            $jsonHTML .='<span><strong>Field Name</strong></span>';
+                        $jsonHTML .='</div>';  
+                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                            $jsonHTML .='<span><strong>Field Value</strong></span>';
+                        $jsonHTML .='</div>';
+                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                            $jsonHTML .='<span><strong>Mapping</strong></span>';
+                        $jsonHTML .='</div>';
+                    $jsonHTML .='</div>';
+                $jsonHTML .='</div>';
+                $extraFields = array(
+                    'advertiser_name' => Session::get('advertiser_id'),
+                    'client_name' => Session::get('clients_id'),
+                    'media_name' => Session::get('media_line'),
+                );
+                foreach( $extraFields as $extraFieldsKey => $extraFieldsValue ){
+                    if( array_key_exists($extraFieldsKey, $tableFieldsList) ) {
+                        $jsonInput = Helper::getInput($tableFieldsList[$extraFieldsKey], $fieldId, $extraFieldsValue, 'field-exists');
+                    } else {
+                        $jsonInput = Helper::getInput('bigint', $fieldId, $extraFieldsValue, 'field-not-exists');
+                    }
+                    $jsonHTML .= '<div class="col-md-6" style="display:none;">';
+                        $jsonHTML .='<div class="row ">';
+                            $jsonHTML .='<div class="col-md-4 form-group">';
+                                $jsonHTML .= $jsonInput;
+                            $jsonHTML .='</div>';
+                            $jsonHTML .='<div class="col-md-4 form-group mapping">';
+                                $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid" aria-invalid="false">';
+                                    $jsonHTML .='<option value="">Table Fields Option</option>';
+                                    foreach($tableFieldsList as $tableFieldsListKey => $tableFieldsListVal ){
+                                        $selected  = ( $extraFieldsKey == $tableFieldsListKey )? 'selected="selected"':'';
+                                        $jsonHTML .='<option value="'.Helper::addUnderscore($tableFieldsListKey).'" attr-key="" '.$selected.'>'.Helper::removeUnderscore($tableFieldsListKey).'</option>';
+                                    }
+                                $jsonHTML .= '</select>';
+                            $jsonHTML .='</div>';
+                        $jsonHTML .='</div>';
+                    $jsonHTML .='</div>';
+                }
+                foreach( $jsonFileFields as $jsonFileFieldsKey => $jsonFileFieldsVal ){
+                    if( array_key_exists($jsonFileFieldsKey, $tableFieldsList) ) {
+                        $jsonInput = Helper::getInput($tableFieldsList[$jsonFileFieldsKey], $fieldId, $jsonFileFieldsVal, 'field-exists');
+                    } else {
+                        $jsonInput = Helper::getInput('bigint', $fieldId, $jsonFileFieldsVal, 'field-not-exists');
+                    }
+                    $jsonFieldNameRemoveUndersocde = Helper::removeUnderscore($jsonFileFieldsKey);
+                    $addEvenOddClass = ( $fieldId % 2) ? 'odd':'even';
+                    $jsonHTML .= '<div class="col-md-6 '.$addEvenOddClass.' ">';
+                        $jsonHTML .='<div class="row align-items-center">';
+                            $jsonHTML .='<div class="col-md-4 form-group text-right">';
+                                $jsonHTML .='<span><strong>'.$jsonFieldNameRemoveUndersocde.'</strong></span>';
+                            $jsonHTML .='</div>';  
+                            $jsonHTML .='<div class="col-md-4 form-group json-mapping-field">';
+                                $jsonHTML .= $jsonInput;
+                            $jsonHTML .='</div>';
+                            $jsonHTML .='<div class="col-md-4 form-group mapping">';
+                                $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid" aria-invalid="false">';
+                                    $jsonHTML .='<option value="">Table Fields Option</option>';
+                                    foreach($tableFieldsList as $tableFieldsListKey => $tableFieldsListVal ){
+                                        $selected  = ( $jsonFileFieldsKey == $tableFieldsListKey )? 'selected="selected"':'';
+                                        $jsonHTML .='<option value="'.Helper::addUnderscore($tableFieldsListKey).'" attr-key="" '.$selected.'>'.Helper::removeUnderscore($tableFieldsListKey).'</option>';
+                                    }
+                                $jsonHTML .= '</select>';
+                            $jsonHTML .='</div>';
+                        $jsonHTML .='</div>';
+                    $jsonHTML .='</div>';
+                    $fieldId++;
+                }
+                return json_encode($jsonHTML);
+            } else{
+                $data = array( 'status' => 0 , 'message' => 'Please Check JSON field name & Table field name');
+                return response()->json($data);    
             }
+        } else{
+            $data = array( 'status' => 0 , 'message' => 'Please Check JSON file');
+            return response()->json($data);  
         }
-        
-        return json_encode($jsonHTML);
     }
 
     public function jsonMappingData( Request $request ){

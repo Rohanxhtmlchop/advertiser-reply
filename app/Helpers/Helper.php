@@ -319,27 +319,27 @@ class Helper{
         $input = '';
         switch ($tableName) {
             case "bigint":
-                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="bigint" class="au-input au-input--full form-control '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
+                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="bigint" class="au-input au-input--full json-data-field form-control '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
                 break;
             case "string":
-                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="string" class="au-input au-input--full form-control '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
+                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="string" class="au-input au-input--full json-data-field form-control '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
                 break;
             case "integer":
-                $input = '<input type="number" id="db_field_name_'.$fieldId.'" attr-key="integer" class="au-input au-input--full form-control '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
+                $input = '<input type="number" id="db_field_name_'.$fieldId.'" attr-key="integer" class="au-input au-input--full json-data-field form-control '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
                 break;
             case "datetime":
-                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="datetime" class="au-input au-input--full form-control json-datetime '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
+                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="datetime" class="au-input au-input--full json-data-field form-control json-datetime '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
                 break;
             case "time":
-                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="time" class="au-input au-input--full form-control json-time '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
+                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="time" class="au-input au-input--full json-data-field form-control json-time '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
                 break;
             case "date":
-                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="date" class="au-input au-input--full form-control json-year '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
+                $input = '<input type="text" id="db_field_name_'.$fieldId.'" attr-key="date" class="au-input au-input--full json-data-field form-control json-year '.$class.'" name="db_field_name[]" value="'.$fieldsVal.'" autofocus="">';
                 break;
             case "boolean":
                 $selectFirst = ( $fieldsVal == 0 )?'selected="selected"':""; 
                 $selectSecond = ( $fieldsVal == 1 )?'selected="selected"':""; 
-                $input = '<select name="db_field_name[]" id="db_field_name_'.$fieldId.'" attr-key="boolean" class="au-input au-input--full valid" aria-invalid="false">
+                $input = '<select name="db_field_name[]" id="db_field_name_'.$fieldId.'" attr-key="boolean" class="au-input au-input--full valid json-data-field" aria-invalid="false">
                 <option value="0"'.$selectFirst.'>0</option><option value="1" '.$selectSecond.'>1</option></select>';
                 break;
         }

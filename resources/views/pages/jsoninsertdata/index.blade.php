@@ -12,7 +12,7 @@
                 <section class="signup-step-container">
                     <div class="container-fluid">
                         <div class="row d-flex justify-content-center align-items-center">
-                            <div class="col-lg-8">
+                            <div class="col-lg-12">
                                 <div class="wizard">
                                     <div class="wizard-inner">
                                         <div class="connecting-line"></div>
@@ -33,10 +33,10 @@
                                         <div class="tab-content" id="main_form">
                                             <div class="tab-pane active" role="tabpanel" id="upload">
                                                 <h4 class="text-center">Upload</h4>
-                                                <div class="upload-fields">
-                                                    <div class="col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4 form-group">
+                                                <div class="upload-fields row justify-content-center align-items-center">
+                                                    <div class="col-md-7">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-md-4 form-group text-right">
                                                                 <label for="upload_json">Upload json File</label>
                                                             </div>
                                                             <div class="col-md-8 form-group">
@@ -44,9 +44,9 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-4 form-group">
+                                                    <div class="col-md-7">
+                                                        <div class="row justify-content-center align-items-center">
+                                                            <div class="col-md-4 form-group text-right">
                                                                 <label for="table_list">Table List</label>
                                                             </div>
                                                             <div class="col-md-8 form-group">
@@ -74,65 +74,17 @@
                                             <div class="tab-pane" role="tabpanel" id="fieldmapping">
                                                 <h4 class="text-center">Column Mapping</h4>
                                                 <div class="row" id="db_fields_mapping">
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
                                                         <div class="row">
-                                                            <div class="col-md-6 form-group">
-                                                                <p><strong>Column Name</strong></p>
-                                                            </div>  
-                                                            <div class="col-md-6 form-group">
-                                                                <p><strong>Map Fields</strong></p>
-                                                            </div>         
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-6 form-group">
-                                                                <span><strong>Name</strong></span>
-                                                                <p>Sample:Test Data</p>
-                                                            </div>  
-                                                            <div class="col-md-6 form-group">
-                                                                <select name="table_field_list" id="table_field_list"  class="au-input au-input--full valid" aria-invalid="false">
-                                                                    <option value="">Table Fields Option</option>
-                                                                    <option value="name">Name</option>
-                                                                    <option value="deal_unit">Deal Unit</option>
-                                                                    <option value="demo">Demo</option>
-                                                                    <option value="ae">AE</option>
-                                                                </select>
-                                                            </div>         
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-6 form-group">
-                                                                <span><strong>Deal Unit</strong></span>
-                                                                <p>Sample:123</p>
-                                                            </div>  
-                                                            <div class="col-md-6 form-group">
-                                                                <select name="table_field_list" id="table_field_list"  class="au-input au-input--full valid" aria-invalid="false">
-                                                                    <option value="">Table Fields Option</option>
-                                                                    <option value="name">Name</option>
-                                                                    <option value="deal_unit">Deal Unit</option>
-                                                                    <option value="demo">Demo</option>
-                                                                    <option value="ae">AE</option>
-                                                                </select>
-                                                            </div>         
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="row">
-                                                            <div class="col-md-6 form-group">
-                                                                <span><strong>AE</strong></span>
-                                                                <p>Sample:789</p>
-                                                            </div>  
-                                                            <div class="col-md-6 form-group">
-                                                                <select name="table_field_list" id="table_field_list"  class="au-input au-input--full valid" aria-invalid="false">
-                                                                    <option value="">Table Fields Option</option>
-                                                                    <option value="name">Name</option>
-                                                                    <option value="deal_unit">Deal Unit</option>
-                                                                    <option value="demo">Demo</option>
-                                                                    <option value="ae">AE</option>
-                                                                </select>
-                                                            </div>         
+                                                            <div class="col-md-4 form-group text-center">
+                                                                <span><strong>Field Name</strong></span>
+                                                            </div>
+                                                            <div class="col-md-4 form-group text-center">
+                                                                <span><strong>Field Value</strong></span>
+                                                            </div>
+                                                            <div class="col-md-4 form-group text-center">
+                                                                <span><strong>Mapping</strong></span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -147,8 +99,8 @@
                                             </div>
                                             <div class="tab-pane" role="tabpanel" id="preview">
                                                 <h4 class="text-center">Preview</h4>
-                                                <div class="row">
-                                                    <div class="new-campaign-table-box table-responsive">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-md-7 new-campaign-table-box table-responsive">
                                                         <table  class="table custom-table table-borderless table-striped dataTable no-footer"  style="width:100%">
                                                             <thead>
                                                                 <tr>
@@ -156,12 +108,7 @@
                                                                     <th>Field value</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody class="table-field-list">
-                                                                <tr class="tr-shadow">
-                                                                    <th class="new-campaign-id">1100000004</th>
-                                                                    <td class="new-campaign-name">New I3 all Electric</td>
-                                                                </tr>
-                                                            </tbody>
+                                                            <tbody class="table-field-list"></tbody>
                                                         </table>
                                                     </div>
                                                 </div>

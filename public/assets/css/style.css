@@ -157,7 +157,7 @@ transform: translate3d(0, -12px, 0) rotate(-90deg);top: -3px;}
 .campaign-edit .bg-active {background: #ffc10794; }
 input[type=number]::-webkit-outer-spin-button, input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; }
-.connecting-line{width: 70% !important;}
+.connecting-line{width: 66% !important;}
 .wizard .nav-tabs > li{width: 33.33% !important;}
 .wizard .nav-tabs > li a{margin: 0px !important;}
 .wizard .nav-tabs > li.active > a i{color: #a5c32a !important;}

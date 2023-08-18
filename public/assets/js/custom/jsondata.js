@@ -61,60 +61,63 @@ $(document).ready(function () {
                     data: data,
                     cache: false,
                     success: function (response) {
-                        $('#db_fields_mapping').empty().append(response);
                         parentData.find('span.spinner').hide();
-                        $(this).prop('disabled',false);
-                        setTimeout(function(){
-                            $('#db_fields_mapping .col-md-12').each(function(){
-                                if( $(this).find('.col-md-4 .form-control').hasClass('json-datetime') ){
-                                    var dateId = $(this).find('.col-md-4 .json-datetime').attr('id');
-                                    $('#'+dateId).daterangepicker({
-                                        autoUpdateInput: false,
-                                        timePicker : true,
-                                        singleDatePicker:true,
-                                        timePicker24Hour : true,
-                                        timePickerIncrement : 1,
-                                        timePickerSeconds : true,
-                                        locale: {
-                                            format: 'MM-DD-YYYY HH:mm:ss',
-                                        },
-                                    }, (from_date) => {
-                                        $('#'+dateId).val(from_date.format('MM-DD-YYYY HH:mm:ss'));
-                                    });
-                                }
-                                if( $(this).find('.col-md-4 .form-control').hasClass('json-year')){
-                                    var dateId = $(this).find('.col-md-4 .json-year').attr('id');
-                                    $('#'+dateId).datepicker({
-                                        format: "yyyy",
-                                        viewMode: "years",
-                                        minViewMode: "years"
-                                    });
-                                }
+                        parentData.find('.next-step').prop('disabled',false);
+                        if( response.status == 0 ){
+                            errorNotification( response.message )
+                            return false;
+                        } else {
+                            $('#db_fields_mapping').empty().append(response);
+                            parentData.find('span.spinner').hide();
+                            $(this).prop('disabled',false);
+                            setTimeout(function(){
+                                $('#db_fields_mapping .col-md-6').each(function(){
+                                    if( $(this).find('.col-md-4 .form-control').hasClass('json-datetime') ){
+                                        var dateId = $(this).find('.col-md-4 .json-datetime').attr('id');
+                                        $('#'+dateId).daterangepicker({
+                                            autoUpdateInput: false,
+                                            timePicker : true,
+                                            singleDatePicker:true,
+                                            timePicker24Hour : true,
+                                            timePickerIncrement : 1,
+                                            timePickerSeconds : true,
+                                            locale: {
+                                                format: 'MM-DD-YYYY HH:mm:ss',
+                                            },
+                                        }, (from_date) => {
+                                            $('#'+dateId).val(from_date.format('MM-DD-YYYY HH:mm:ss'));
+                                        });
+                                    }
+                                    if( $(this).find('.col-md-4 .form-control').hasClass('json-year')){
+                                        var dateId = $(this).find('.col-md-4 .json-year').attr('id');
+                                        $('#'+dateId).datepicker({
+                                            format: "yyyy",
+                                            viewMode: "years",
+                                            minViewMode: "years"
+                                        });
+                                    }
 
-                                if($(this).find('.col-md-4 .form-control').hasClass('json-time')){
-                                    var dateId = $(this).find('.col-md-4 .json-time').attr('id');
-                                    $('#'+dateId).daterangepicker({
-                                        timePicker : true,
-                                        singleDatePicker:true,
-                                        timePicker24Hour : true,
-                                        timePickerIncrement : 1,
-                                        timePickerSeconds : true,
-                                        locale : {
-                                            format : 'HH:mm:ss'
-                                    }}, (from_date) => {
-                                        $('#'+dateId).val(from_date.format('HH:mm:ss'));
-                                    });
-                                }
-                            });
-                            var active = $('.wizard .nav-tabs li.active');
-                            active.next().removeClass('disabled');
-                            nextTab(active);
-                        }, 1000);
-                        return true;
-                    },
-                    error: function (response) {
-                        console.log(response)
-                        return false;
+                                    if($(this).find('.col-md-4 .form-control').hasClass('json-time')){
+                                        var dateId = $(this).find('.col-md-4 .json-time').attr('id');
+                                        $('#'+dateId).daterangepicker({
+                                            timePicker : true,
+                                            singleDatePicker:true,
+                                            timePicker24Hour : true,
+                                            timePickerIncrement : 1,
+                                            timePickerSeconds : true,
+                                            locale : {
+                                                format : 'HH:mm:ss'
+                                        }}, (from_date) => {
+                                            $('#'+dateId).val(from_date.format('HH:mm:ss'));
+                                        });
+                                    }
+                                });
+                                var active = $('.wizard .nav-tabs li.active');
+                                active.next().removeClass('disabled');
+                                nextTab(active);
+                            }, 1000);
+                            return true;
+                        }
                     }
                 });
             } else {
@@ -122,18 +125,25 @@ $(document).ready(function () {
             }
         } else if( parentId == 'fieldmapping') {
             var mappingFlag = true; 
-            $('#db_fields_mapping .col-md-12').each(function(){
+            $('#db_fields_mapping .col-md-6').each(function(){
                 if( ( $(this).find('.col-md-4 .form-control').attr('attr-key') == 'datetime' ) || ( $(this).find('.col-md-4 .form-control').attr('attr-key') == 'bigint' ) ){
                     var fieldInput = $(this).find('.mapping select[name="select_db_field[]"]');
                     var fieldVal = fieldInput.val();
+                    var fieldData = fieldInput.parent().parent().find('.json-data-field').val();
+
+                    fieldInput.parent().find('label').empty();
                     if( fieldVal == '' ){
                         var inputId = fieldInput.attr('id');
-                        fieldInput.parent().find('label').empty();
                         fieldInput.parent().append('<label class="error invalid-feedback" for="'+inputId+'">Please select Table field.</label>');
                         mappingFlag = false; 
-                    } else{
-                        fieldInput.parent().find('label').empty();
-                    }
+                    } 
+
+                    fieldInput.parent().parent().find('.json-mapping-field label').empty();
+                    if( fieldData == '' ){
+                        var inputId = fieldInput.attr('id');
+                        fieldInput.parent().parent().find('.json-mapping-field').append('<label class="error invalid-feedback" for="'+inputId+'">Please enter value.</label>');
+                        mappingFlag = false; 
+                    } 
                 }
             });
             if( mappingFlag == true ){
