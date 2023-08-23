@@ -41,32 +41,25 @@ class JsonInsertDataController extends Controller
             if( $jsonFileFields['name'] == $tableName ){
                 unset($jsonFileFields['name']);
                 $fieldId = 1;
-                $jsonHTML .= '<div class="col-md-6">';
-                    $jsonHTML .='<div class="row">';
-                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                $jsonHTML .= '<tr>';
+                    //$jsonHTML .='<div class="row">';
+                        $jsonHTML .='<td class="form-group text-center">';
                             $jsonHTML .='<span><strong>Field Name</strong></span>';
-                        $jsonHTML .='</div>';  
-                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                        $jsonHTML .='</td>';  
+                        $jsonHTML .='<td class="form-group text-center">';
+                            $jsonHTML .='<span><strong>Validation</strong></span>';
+                        $jsonHTML .='</td>';
+                        $jsonHTML .='<td class="form-group text-center">';
                             $jsonHTML .='<span><strong>Field Value</strong></span>';
-                        $jsonHTML .='</div>';
-                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
+                        $jsonHTML .='</td>';
+                        $jsonHTML .='<td class="form-group text-center">';
                             $jsonHTML .='<span><strong>Mapping</strong></span>';
-                        $jsonHTML .='</div>';
-                    $jsonHTML .='</div>';
-                $jsonHTML .='</div>';
-                $jsonHTML .= '<div class="col-md-6">';
-                    $jsonHTML .='<div class="row">';
-                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
-                            $jsonHTML .='<span><strong>Field Name</strong></span>';
-                        $jsonHTML .='</div>';  
-                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
-                            $jsonHTML .='<span><strong>Field Value</strong></span>';
-                        $jsonHTML .='</div>';
-                        $jsonHTML .='<div class="col-md-4 form-group text-center">';
-                            $jsonHTML .='<span><strong>Mapping</strong></span>';
-                        $jsonHTML .='</div>';
-                    $jsonHTML .='</div>';
-                $jsonHTML .='</div>';
+                        $jsonHTML .='</td>';
+                        $jsonHTML .='<td class="form-group text-center">';
+                            $jsonHTML .='<span><strong>Comment</strong></span>';
+                        $jsonHTML .='</td>';
+                    //$jsonHTML .='</div>';
+                $jsonHTML .='</tr>';
                 $extraFields = array(
                     'advertiser_name' => Session::get('advertiser_id'),
                     'client_name' => Session::get('clients_id'),
@@ -78,12 +71,12 @@ class JsonInsertDataController extends Controller
                     } else {
                         $jsonInput = Helper::getInput('bigint', $fieldId, $extraFieldsValue, 'field-not-exists');
                     }
-                    $jsonHTML .= '<div class="col-md-6" style="display:none;">';
-                        $jsonHTML .='<div class="row ">';
-                            $jsonHTML .='<div class="col-md-4 form-group">';
+                    $jsonHTML .= '<tr class="tr-shadow" style="display:none;">';
+                        //$jsonHTML .='<td class="">';
+                            $jsonHTML .='<td class=" form-group">';
                                 $jsonHTML .= $jsonInput;
-                            $jsonHTML .='</div>';
-                            $jsonHTML .='<div class="col-md-4 form-group mapping">';
+                            $jsonHTML .='</td>';
+                            $jsonHTML .='<td class="form-group mapping">';
                                 $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid" aria-invalid="false">';
                                     $jsonHTML .='<option value="">Table Fields Option</option>';
                                     foreach($tableFieldsList as $tableFieldsListKey => $tableFieldsListVal ){
@@ -91,9 +84,9 @@ class JsonInsertDataController extends Controller
                                         $jsonHTML .='<option value="'.Helper::addUnderscore($tableFieldsListKey).'" attr-key="" '.$selected.'>'.Helper::removeUnderscore($tableFieldsListKey).'</option>';
                                     }
                                 $jsonHTML .= '</select>';
-                            $jsonHTML .='</div>';
-                        $jsonHTML .='</div>';
-                    $jsonHTML .='</div>';
+                            $jsonHTML .='</td>';
+                        //$jsonHTML .='</div>';
+                    $jsonHTML .='</tr>';
                 }
                 foreach( $jsonFileFields as $jsonFileFieldsKey => $jsonFileFieldsVal ){
                     if( array_key_exists($jsonFileFieldsKey, $tableFieldsList) ) {
@@ -103,15 +96,18 @@ class JsonInsertDataController extends Controller
                     }
                     $jsonFieldNameRemoveUndersocde = Helper::removeUnderscore($jsonFileFieldsKey);
                     $addEvenOddClass = ( $fieldId % 2) ? 'odd':'even';
-                    $jsonHTML .= '<div class="col-md-6 '.$addEvenOddClass.' ">';
-                        $jsonHTML .='<div class="row align-items-center">';
-                            $jsonHTML .='<div class="col-md-4 form-group text-right">';
+                    $jsonHTML .= '<tr class="tr-shadow '.$addEvenOddClass.' ">';
+                       // $jsonHTML .='<div class="row align-items-center">';
+                            $jsonHTML .='<td class="form-group text-right" attr-namr="'.$jsonFileFieldsKey.'">';
                                 $jsonHTML .='<span><strong>'.$jsonFieldNameRemoveUndersocde.'</strong></span>';
-                            $jsonHTML .='</div>';  
-                            $jsonHTML .='<div class="col-md-4 form-group json-mapping-field">';
+                            $jsonHTML .='</td>';  
+                            $jsonHTML .='<td class="form-group validation">';
+                                $jsonHTML .= Helper::getValidationContent($jsonFileFieldsKey);
+                            $jsonHTML .='</td>';
+                            $jsonHTML .='<td class="form-group json-mapping-field">';
                                 $jsonHTML .= $jsonInput;
-                            $jsonHTML .='</div>';
-                            $jsonHTML .='<div class="col-md-4 form-group mapping">';
+                            $jsonHTML .='</td>';
+                            $jsonHTML .='<td class="form-group mapping">';
                                 $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid" aria-invalid="false">';
                                     $jsonHTML .='<option value="">Table Fields Option</option>';
                                     foreach($tableFieldsList as $tableFieldsListKey => $tableFieldsListVal ){
@@ -119,9 +115,11 @@ class JsonInsertDataController extends Controller
                                         $jsonHTML .='<option value="'.Helper::addUnderscore($tableFieldsListKey).'" attr-key="" '.$selected.'>'.Helper::removeUnderscore($tableFieldsListKey).'</option>';
                                     }
                                 $jsonHTML .= '</select>';
-                            $jsonHTML .='</div>';
-                        $jsonHTML .='</div>';
-                    $jsonHTML .='</div>';
+                            $jsonHTML .='</td>';
+                            $jsonHTML .='<td class="form-group error-message">';
+                            $jsonHTML .='</td>';
+                       // $jsonHTML .='</div>';
+                    $jsonHTML .='</tr>';
                     $fieldId++;
                 }
                 return json_encode($jsonHTML);

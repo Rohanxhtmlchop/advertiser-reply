@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\Advertiser;
+use App\Models\Agencys;
 use App\Models\Brands;
 use App\Models\UserActivitiesLog;
 use Illuminate\Routing\Route;
@@ -14,7 +15,11 @@ use App\Models\Deals;
 use App\Models\DealPayload;
 use App\Models\Campaigns;
 use App\Models\CampaignPayload;
+use App\Models\DayParts;
+use App\Models\Demographic;
+use App\Models\Locations;
 use App\Models\Medias;
+use App\Models\Outlets;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -394,6 +399,60 @@ class Helper{
             break;
             case "campaign_payloads":
                 $tableData = new CampaignPayload;
+            break;
+        }
+        return $tableData;
+    }
+
+    public static function createTableFieldDropdown($fieldName,$dropdownArray){
+        $dropdownHTML = "";
+        if( count( $dropdownArray ) > 0 ){
+            $dropdownHTML .= '<select name="'.$fieldName.'" class="au-input au-input--full json-mapping-option">';
+                $dropdownHTML .= '<option value="">Select Option</option>';
+                foreach( $dropdownArray as $dropdownArrayKey => $dropdownArrayValue ){
+                    $dropdownHTML .= '<option value="'.$dropdownArrayValue['id'].'">'.$dropdownArrayValue['name'].'</option>';
+                }
+            $dropdownHTML .= '</select>';
+        }
+        return $dropdownHTML;
+    }
+    public static function getValidationContent($tablename){
+        $advertiserId = Session::get('advertiser_id');
+        $clientsId = Session::get('clients_id');
+        $mediasId = Session::get('medias_id');
+        $tableData = "";
+        switch ($tablename) {
+            case "deal_name":
+                $dealView = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
+                ->where('deals.advertiser_id', '=', $advertiserId)
+                ->where('deals.media_id', '=', $mediasId)
+                ->where('deals.client_id', '=', $clientsId)
+                ->get(['deals.id as id','deal_payloads.name as name'])->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+            break;
+            case "demographic_name":
+                $dealView = Demographic::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+            break;
+            case "brand_name":
+                $dealView = Brands::where('client_id', '=', $clientsId)->where('advertiser_id', '=', $advertiserId)->where('status', '=', 1)->get(['id','product_name as name'])->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+            break;
+            case "outlet_name":
+                $dealView = Outlets::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','outlet_type as name'])->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+            break;
+            case "agency_name":
+                $dealView = Agencys::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+            break;
+            case "daypart_name":
+                $dealView = DayParts::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+            break;
+            case "location_name":
+                $dealView = Locations::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
             break;
         }
         return $tableData;

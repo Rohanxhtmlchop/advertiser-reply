@@ -73,20 +73,19 @@
                                             </div>
                                             <div class="tab-pane" role="tabpanel" id="fieldmapping">
                                                 <h4 class="text-center">Column Mapping</h4>
-                                                <div class="row" id="db_fields_mapping">
-                                                    <div class="col-md-6">
-                                                        <div class="row">
-                                                            <div class="col-md-4 form-group text-center">
-                                                                <span><strong>Field Name</strong></span>
-                                                            </div>
-                                                            <div class="col-md-4 form-group text-center">
-                                                                <span><strong>Field Value</strong></span>
-                                                            </div>
-                                                            <div class="col-md-4 form-group text-center">
-                                                                <span><strong>Mapping</strong></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                <div class="row" >
+                                                    <table class="table custom-table table-borderless table-striped dataTable no-footer" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Field Name</th>
+                                                                <th>Field Value</th>
+                                                                <th>Validation</th>
+                                                                <th>Mapping</th>
+                                                                <th>Comment</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-field-list" id="db_fields_mapping"></tbody>
+                                                    </table>
                                                 </div>
                                                 <ul class="list-inline pull-right">
                                                     <li><button type="button" class="default-btn prev-step">Back</button></li>

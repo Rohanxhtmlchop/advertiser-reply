@@ -33,8 +33,6 @@ $(document).ready(function () {
                     } 
                 }
             }   
-            
-            
             if( flag == 1 ){
                 addErrorMessage('table_list','');
                 var data = new FormData();
@@ -124,28 +122,38 @@ $(document).ready(function () {
                 return false;
             }
         } else if( parentId == 'fieldmapping') {
+            $('.json-mapping-option').change(function(){
+                var selectOption = $(this).val();
+                $(this).parent().parent().find('.json-mapping-field input[type="text"]').val(selectOption);
+            });
             var mappingFlag = true; 
-            $('#db_fields_mapping .col-md-6').each(function(){
-                if( ( $(this).find('.col-md-4 .form-control').attr('attr-key') == 'datetime' ) || ( $(this).find('.col-md-4 .form-control').attr('attr-key') == 'bigint' ) ){
-                    var fieldInput = $(this).find('.mapping select[name="select_db_field[]"]');
+            $('tbody#db_fields_mapping tr').each(function(){
+                if( ( $(this).find('td.json-mapping-field .form-control').attr('attr-key') == 'datetime' ) || ( $(this).find('td.json-mapping-field .form-control').attr('attr-key') == 'bigint' ) ){
+                    var fieldInput = $(this).find('td.mapping select[name="select_db_field[]"]');
                     var fieldVal = fieldInput.val();
                     var fieldData = fieldInput.parent().parent().find('.json-data-field').val();
+                    /*console.log( fieldInput.parent().parent().attr('class')  )
+                    console.log( fieldInput.parent().parent().find('.error-message').attr('class') );*/
 
-                    fieldInput.parent().find('label').empty();
+                    fieldInput.parent().parent().find('.error-message').empty();
                     if( fieldVal == '' ){
                         var inputId = fieldInput.attr('id');
-                        fieldInput.parent().append('<label class="error invalid-feedback" for="'+inputId+'">Please select Table field.</label>');
+                        fieldInput.parent().parent().find('.error-message').append('<label class="error invalid-feedback" for="'+inputId+'">Please select Table field.</label>');
                         mappingFlag = false; 
                     } 
 
-                    fieldInput.parent().parent().find('.json-mapping-field label').empty();
                     if( fieldData == '' ){
                         var inputId = fieldInput.attr('id');
-                        fieldInput.parent().parent().find('.json-mapping-field').append('<label class="error invalid-feedback" for="'+inputId+'">Please enter value.</label>');
+                        fieldInput.parent().parent().find('.error-message').append('<label class="error invalid-feedback" for="'+inputId+'">Please enter value.</label>');
                         mappingFlag = false; 
                     } 
+                    console.log(mappingFlag);
                 }
             });
+            $('tbody#db_fields_mapping tr').each(function(){
+                console.log( $(this).find('td.validation .json-mapping-option:selected').val() );
+            });
+            
             if( mappingFlag == true ){
                 var parentData = $(this).parent();
                 parentData.find('span.spinner').show();
@@ -187,7 +195,7 @@ $(document).ready(function () {
                         parentData.find('span.spinner').hide();
                         if( response.status == 1 ){
                             sucessNotification(response.message)
-                            setTimeout( function() {window.location.href = URL+'/campaign'; },1000 );
+                            setTimeout( function() {window.location.href = URL  ; },1000 );
                             return true;
                         } else {
                             errorNotification(response.message);

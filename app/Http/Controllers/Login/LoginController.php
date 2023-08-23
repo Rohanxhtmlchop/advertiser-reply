@@ -225,6 +225,7 @@ class LoginController extends Controller
                                 'clients.name as clients_name', 
                                 'clients.id as clients_id',
                                 'medias.name as medias_name',
+                                'medias.id as medias_id',
                             ]);
                     $currentDate = date('m-d-Y H:i:s');
                     if( $getUserData ){
@@ -237,6 +238,7 @@ class LoginController extends Controller
                         Session::put('advertiser_email_address', $getUserData->email_address);
                         Session::put('advertiser_logintime', $currentDate);
                         Session::put('media_line', $getUserData->medias_name);
+                        Session::put('medias_id', $getUserData->medias_id);
                     }
 
                     $checkCount = UserAccessTokens::where('user_id', '=' , $sessionUserId)->where('token', '=' , $otp)->where('id', '=' , $getTokenArray['id'])

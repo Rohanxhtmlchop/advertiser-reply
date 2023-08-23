@@ -333,7 +333,7 @@ class CampaignController extends Controller
                         'campaign_payloads.grp' => $newCampaignArray['cpm_ipm_grp'],
                         'campaign_payloads.cpm' => $newCampaignArray['cpm_ipm_cpm'],
                         'campaign_payloads.inventory_length' => $newCampaignArray['ad_length'],
-                        'campaigns.status' => 3,
+                        'campaigns.status' => 8,
                         'demographics.updated_by' => $userId,
                         'demographics.updated_at' => $currentDate,
                         'campaigns.updated_by' => $userId,
