@@ -207,7 +207,7 @@ class LoginController extends Controller
             
             $otp = base64_decode($request['data']['otp']);
             $date = date('Y-m-d H:i:s');
-            $aboveTwoMinite = date("Y-m-d H:i:s", strtotime("-2 minutes"));
+            $aboveTwoMinite = date("Y-m-d H:i:s", strtotime("-5 minutes"));
             $getTokenQuery = UserAccessTokens::where('user_id', '=' , $sessionUserId)->where('token', '=' , $otp)->where('verify', '=' , 1)->whereBetween('created_at', [$aboveTwoMinite,  $date]);
             $checkCount = $getTokenQuery->count();
             if( $checkCount == 1 ){

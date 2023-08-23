@@ -138,7 +138,7 @@ $(document).ready(function(){
                             $('.login .login-form').hide();
                             $('.login .verify-account-form').show();
                             $('.login .alert-notification').hide();
-                            countdown('02:00');
+                            countdown('05:00');
                             $('#email_send_otp').hide();
                         },2000);
                     }
@@ -180,7 +180,7 @@ $(document).ready(function(){
     });
 
     $('#email_send_otp').click(function(){
-        countdown('02:00');
+        countdown('05:00');
         $('#email_send_otp').css({'pointer-events': 'all','cursor': 'not-allowed','opacity': '0.7'});
         $('.email-otp-number input[type="number"]').each(function(){
             $(this).prop('disabled', true);
