@@ -88,7 +88,7 @@
                                             <div class="col-md-12 mt-3">
                                                 <div class="row">
                                                     <div class="col-md-6 email-time">
-                                                        <span>Time: <b class="counter">2:00</b></span>
+                                                        <span>Time: <b class="counter">5:00</b></span>
                                                     </div>
                                                     <div class="col-md-6 send-email-otp">
                                                         <button id="email_send_otp">Resend OTP</button>
