@@ -98,7 +98,7 @@ transform: translate(0, -50%);} */
 .campaign-number-time-sec .campaign-number{text-align: right !important;}
 .campaign-number-time-sec .campaign-date{text-align: right !important;}
 .campaign-number h4{margin-bottom: 0px;font-size: 16px;line-height: 1.5;}
-.campaign-date span{display: block;font-size: 14px;font-weight: 500;}
+.campaign-date span{display: block;font-size: 12px;font-weight: 500;}
 table.dataTable.table-striped>tbody>tr>td{ vertical-align: middle;}
 .form-check-input{border-color: #6455b3;width: 16px;height: 16px;}
 .form-check-input:checked{background-color: #6455b3;border-color: #6455b3;}
@@ -168,6 +168,10 @@ input[type=number] { -moz-appearance: textfield; }
 .step-form-sec{display: flex;align-items: center;}
 .signup-step-container{padding: 30px 0px !important;}
 .step-form-sec .section__content{width: 100%;}
+.json-mapping-view-sec #db_fields_mapping td.error-message i{color:green;}
+.json-mapping-view-sec #db_fields_mapping .error-message i.fa-times-circle{color:red;}
+.json-mapping-view-sec { table-layout: fixed; }
+
 @media (min-width: 1400px){
     .advertiser-view .head h2{width: calc(100% - 340px);padding-right: 5px;}
 }
@@ -202,7 +206,7 @@ input[type=number] { -moz-appearance: textfield; }
     .campaign-number-time-sec{max-width: 217px;}
     .campaign-edit .deal-view-box{padding-top: 35px;}
     .campaign-number h4{font-size: 14px;}
-    .campaign-date span{font-size: 12px;}
+    .campaign-date span{font-size: 10px;}
     .responsive-tabs .nav-tabs .nav-link{padding: 15px 10px;}
     .responsive-tabs .nav-tabs .nav-link{font-size: 12px;}
 }

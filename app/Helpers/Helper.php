@@ -404,19 +404,20 @@ class Helper{
         return $tableData;
     }
 
-    public static function createTableFieldDropdown($fieldName,$dropdownArray){
+    public static function createTableFieldDropdown($fieldName,$dropdownArray,$fieldValue){
         $dropdownHTML = "";
         if( count( $dropdownArray ) > 0 ){
             $dropdownHTML .= '<select name="'.$fieldName.'" class="au-input au-input--full json-mapping-option">';
                 $dropdownHTML .= '<option value="">Select Option</option>';
                 foreach( $dropdownArray as $dropdownArrayKey => $dropdownArrayValue ){
-                    $dropdownHTML .= '<option value="'.$dropdownArrayValue['id'].'">'.$dropdownArrayValue['name'].'</option>';
+                    $selected = ( $fieldValue == $dropdownArrayValue['name'] ) ? 'selected="selected"' : "";  
+                    $dropdownHTML .= '<option value="'.$dropdownArrayValue['name'].'" '.$selected.'>'.$dropdownArrayValue['name'].'</option>';
                 }
             $dropdownHTML .= '</select>';
         }
         return $dropdownHTML;
     }
-    public static function getValidationContent($tablename){
+    public static function getValidationContent($tablename,$selectOptionName){
         $advertiserId = Session::get('advertiser_id');
         $clientsId = Session::get('clients_id');
         $mediasId = Session::get('medias_id');
@@ -428,31 +429,31 @@ class Helper{
                 ->where('deals.media_id', '=', $mediasId)
                 ->where('deals.client_id', '=', $clientsId)
                 ->get(['deals.id as id','deal_payloads.name as name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
             break;
             case "demographic_name":
                 $dealView = Demographic::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
             break;
             case "brand_name":
                 $dealView = Brands::where('client_id', '=', $clientsId)->where('advertiser_id', '=', $advertiserId)->where('status', '=', 1)->get(['id','product_name as name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
             break;
             case "outlet_name":
                 $dealView = Outlets::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','outlet_type as name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
             break;
             case "agency_name":
                 $dealView = Agencys::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
             break;
             case "daypart_name":
                 $dealView = DayParts::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
             break;
             case "location_name":
                 $dealView = Locations::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
             break;
         }
         return $tableData;

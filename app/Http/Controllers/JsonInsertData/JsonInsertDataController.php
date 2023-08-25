@@ -41,25 +41,6 @@ class JsonInsertDataController extends Controller
             if( $jsonFileFields['name'] == $tableName ){
                 unset($jsonFileFields['name']);
                 $fieldId = 1;
-                $jsonHTML .= '<tr>';
-                    //$jsonHTML .='<div class="row">';
-                        $jsonHTML .='<td class="form-group text-center">';
-                            $jsonHTML .='<span><strong>Field Name</strong></span>';
-                        $jsonHTML .='</td>';  
-                        $jsonHTML .='<td class="form-group text-center">';
-                            $jsonHTML .='<span><strong>Validation</strong></span>';
-                        $jsonHTML .='</td>';
-                        $jsonHTML .='<td class="form-group text-center">';
-                            $jsonHTML .='<span><strong>Field Value</strong></span>';
-                        $jsonHTML .='</td>';
-                        $jsonHTML .='<td class="form-group text-center">';
-                            $jsonHTML .='<span><strong>Mapping</strong></span>';
-                        $jsonHTML .='</td>';
-                        $jsonHTML .='<td class="form-group text-center">';
-                            $jsonHTML .='<span><strong>Comment</strong></span>';
-                        $jsonHTML .='</td>';
-                    //$jsonHTML .='</div>';
-                $jsonHTML .='</tr>';
                 $extraFields = array(
                     'advertiser_name' => Session::get('advertiser_id'),
                     'client_name' => Session::get('clients_id'),
@@ -98,11 +79,11 @@ class JsonInsertDataController extends Controller
                     $addEvenOddClass = ( $fieldId % 2) ? 'odd':'even';
                     $jsonHTML .= '<tr class="tr-shadow '.$addEvenOddClass.' ">';
                        // $jsonHTML .='<div class="row align-items-center">';
-                            $jsonHTML .='<td class="form-group text-right" attr-namr="'.$jsonFileFieldsKey.'">';
+                            $jsonHTML .='<td class="form-group text-right" attr-name="'.$jsonFileFieldsKey.'">';
                                 $jsonHTML .='<span><strong>'.$jsonFieldNameRemoveUndersocde.'</strong></span>';
                             $jsonHTML .='</td>';  
                             $jsonHTML .='<td class="form-group validation">';
-                                $jsonHTML .= Helper::getValidationContent($jsonFileFieldsKey);
+                                $jsonHTML .= Helper::getValidationContent($jsonFileFieldsKey, $jsonFileFieldsVal);
                             $jsonHTML .='</td>';
                             $jsonHTML .='<td class="form-group json-mapping-field">';
                                 $jsonHTML .= $jsonInput;
@@ -117,6 +98,7 @@ class JsonInsertDataController extends Controller
                                 $jsonHTML .= '</select>';
                             $jsonHTML .='</td>';
                             $jsonHTML .='<td class="form-group error-message">';
+                            $jsonHTML .='<i class="far fa-check-circle" style="color:green"></i>';
                             $jsonHTML .='</td>';
                        // $jsonHTML .='</div>';
                     $jsonHTML .='</tr>';

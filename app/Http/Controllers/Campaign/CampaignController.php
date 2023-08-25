@@ -23,9 +23,13 @@ class CampaignController extends Controller
     
     public function campaignTableRecord( $status = '' ){
         $advertiserId = Session::get('advertiser_id');
+        $clientId = Session::get('clients_id');
+        $mediasId = Session::get('medias_id');
         $campaignTableTitle = Helper::campaignViewTableName();
         $campaignList = Campaigns::join('campaign_payloads', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
             ->where('campaigns.advertiser_id', '=', $advertiserId)
+            ->where('campaigns.client_id','=', $clientId)
+            ->where('campaigns.media_id','=', $mediasId)
             ->when($status, function ($query) use ($status) {
                 return $query->where('campaigns.status','=', $status);
             })
@@ -83,9 +87,12 @@ class CampaignController extends Controller
 
     public function postStatus( Request $request ){
         $advertiserId = Session::get('advertiser_id');
-
+        $clientId = Session::get('clients_id');
+        $mediasId = Session::get('medias_id');
         $dealView = Campaigns::join('campaign_payloads', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
         ->where('campaigns.advertiser_id', '=', $advertiserId)
+        ->where('campaigns.client_id','=', $clientId)
+        ->where('campaigns.media_id','=', $mediasId)
         ->when($request['data'], function ($query) use ($request) {
             return $query->where('campaigns.status','=', $request['data']);
         })
@@ -131,6 +138,8 @@ class CampaignController extends Controller
         if( $request['campaignId'] != '' ){
             $campaignID = base64_decode( $request['campaignId']);
             $advertiserId = Session::get('advertiser_id');
+            $clientId = Session::get('clients_id');
+            $mediasId = Session::get('medias_id');
             $campaignList = Campaigns::join('campaign_payloads', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
                 ->join('brands', 'campaigns.brand_id', '=', 'brands.id')->where('brands.status','=', 1)
                 ->join('medias', 'campaigns.media_id', '=', 'medias.id')->where('medias.status','=', 1)
@@ -140,8 +149,10 @@ class CampaignController extends Controller
                 ->join('day_parts', 'campaigns.daypart_id', '=', 'day_parts.id')->where('day_parts.status','=', 1)
                 ->join('deals', 'campaigns.deal_id', '=', 'deals.id')
                 ->join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
-                ->where('campaigns.advertiser_id', '=', $advertiserId)->where('campaigns.id','=',$campaignID);
-
+                ->where('campaigns.advertiser_id', '=', $advertiserId)
+                ->where('campaigns.id','=',$campaignID)
+                ->where('campaigns.client_id','=', $clientId)
+                ->where('campaigns.media_id','=', $mediasId);
             $campaignListArray = $campaignList ->first([
                 'campaigns.id as campaign_id',
                 'campaigns.*',
@@ -195,6 +206,7 @@ class CampaignController extends Controller
                 'campaigns.valid_to as campaigns_valid_to', 
                 'campaigns.valid_from as campaigns_valid_from', 
                 'campaigns.deal_year as campaigns_year',
+                'campaigns.deal_id as campaigns_deal_id',
             ]);
             $demographicList = Demographic::where('status','=',1)->get(['id','name'])->toArray();
             $daypartsList = DayParts::where('status','=',1)->get(['id','name'])->toArray();

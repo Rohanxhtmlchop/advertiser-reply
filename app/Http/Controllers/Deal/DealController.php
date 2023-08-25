@@ -18,6 +18,8 @@ class DealController extends Controller
 
     public function dealTableRecord( $status = '' ){
         $advertiserId = Session::get('advertiser_id');
+        $clientId = Session::get('clients_id');
+        $mediasId = Session::get('medias_id');
         $dealList = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
             ->join('campaigns', 'campaigns.deal_id', '=', 'deals.id')->where( 'campaigns.delete','=',0)
             ->join('status', 'deals.status', '=', 'status.id')
@@ -25,6 +27,8 @@ class DealController extends Controller
                 return $query->where('deals.status','=', $status);
             })
             ->where('deals.advertiser_id', '=', $advertiserId)
+            ->where('deals.client_id','=', $clientId)
+            ->where('deals.media_id','=', $mediasId)
             ->join('day_parts', 'deals.daypart_id', '=', 'day_parts.id')->where('day_parts.status','=', 1)
             ->join('brands', 'deals.brand_id', '=', 'brands.id')->where('brands.status','=', 1)
             ->orderBy('deals.id', 'asc');
@@ -92,9 +96,12 @@ class DealController extends Controller
 
     public function postStatus( Request $request ){
         $advertiserId = Session::get('advertiser_id');
-
+        $clientId = Session::get('clients_id');
+        $mediasId = Session::get('medias_id');
         $dealView = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
         ->where('deals.advertiser_id', '=', $advertiserId)
+        ->where('deals.client_id','=', $clientId)
+        ->where('deals.media_id','=', $mediasId)
         ->when($request['data'], function ($query) use ($request) {
             return $query->where('deals.status','=', $request['data']);
         })

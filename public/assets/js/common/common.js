@@ -29,11 +29,27 @@ function checkedCheckbox( fieldName, fieldValue ){
   }
 }
 
+function getCurrentDate(time = false){
+  var timeData = "";
+  var today = new Date();
+  if( time != false){  
+    var twoDigitMinites = ((today.getMinutes().length+1) === 1)? (today.getMinutes()) : '0' + (today.getMinutes());
+    timeData = today.getHours() + ":" + twoDigitMinites + ":" + today.getSeconds();
+  }
+  var twoDigitMonth = ((today.getMonth().length+1) === 1)? (today.getMonth()+1) : '0' + (today.getMonth()+1);
+  var date = twoDigitMonth+'/'+today.getDate()+'/'+today.getFullYear();
+  return date+timeData;
+}
+
 function dataAppend( fieldClass, fieldValue, flag = 0, fieldName = '' ){
   $(fieldClass).empty().append(fieldValue);
   if( flag == 1 ){
+    var currentDate = getCurrentDate();
+    var getAdvertiserName = $('#advertiser_name').val();
     $('.send-to-approval').prop("disabled", false);
     $(fieldClass).addClass('bg-active');
+    $('#summary .date_change').addClass('bg-active').text(currentDate);
+    $('#summary .chnage_by').addClass('bg-active').text(getAdvertiserName);
   }
   if( ( fieldName != '' ) && ( fieldValue ==  fieldName ) ){
     $(fieldClass).removeClass('bg-active');

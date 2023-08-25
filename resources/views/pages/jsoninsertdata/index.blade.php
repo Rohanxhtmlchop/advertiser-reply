@@ -21,7 +21,7 @@
                                                 <a href="#upload" data-toggle="tab" aria-controls="upload" role="tab" aria-expanded="true"><span class="round-tab">1 </span> <i>Upload</i></a>
                                             </li>
                                             <li role="presentation" class="disabled">
-                                                <a href="#fieldmapping" data-toggle="tab" aria-controls="fieldmapping" role="tab" aria-expanded="false"><span class="round-tab">2</span> <i>Column Mapping</i></a>
+                                                <a href="#fieldmapping" data-toggle="tab" aria-controls="fieldmapping" role="tab" aria-expanded="false"><span class="round-tab">2</span> <i>Field Mapping</i></a>
                                             </li>
                                             <li role="presentation" class="disabled">
                                                 <a href="#preview" data-toggle="tab" aria-controls="preview" role="tab"><span class="round-tab">3</span> <i>Preview</i></a>
@@ -72,15 +72,15 @@
                                                 </ul>
                                             </div>
                                             <div class="tab-pane" role="tabpanel" id="fieldmapping">
-                                                <h4 class="text-center">Column Mapping</h4>
+                                                <h4 class="text-center">Field Mapping</h4>
                                                 <div class="row" >
-                                                    <table class="table custom-table table-borderless table-striped dataTable no-footer" style="width:100%">
+                                                    <table class="table custom-table table-borderless table-striped dataTable no-footer json-mapping-view-sec" style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>Field Name</th>
-                                                                <th>Field Value</th>
                                                                 <th>Validation</th>
-                                                                <th>Mapping</th>
+                                                                <th>Field Value</th>
+                                                                <th>Field Mapping</th>
                                                                 <th>Comment</th>
                                                             </tr>
                                                         </thead>

@@ -1,3 +1,50 @@
+
+function fieldMapping(){
+    var mappingFlag = true; 
+    $('tbody#db_fields_mapping tr').each(function(){
+        var valiDationFlag = true;
+        var mappingId =  $(this).find('td.mapping select option:selected');
+        var mappingVal =  $(this).find('td.text-right').attr('attr-name');
+        var fieldInput = $(this).find('td.mapping select[name="select_db_field[]"]');
+        fieldInput.parent().parent().find('.error-message').empty();
+        if( mappingId.val() != mappingVal ){
+            mappingId.parent().parent().parent().find('.error-message').append('<label class="error invalid-feedback" for="">Please check table field</label>');
+            mappingFlag = false; 
+            valiDationFlag = false; 
+        }
+        var fieldVal = $(this).find('td.validation select option:selected');
+        if( fieldVal.val() == '' ){
+            fieldVal.parent().parent().parent().find('.error-message').append('<label class="error invalid-feedback" for="">Please select option</label>');
+            mappingFlag = false; 
+            valiDationFlag = false; 
+        }
+
+        if( ( $(this).find('td.json-mapping-field .form-control').attr('attr-key') == 'datetime' ) || ( $(this).find('td.json-mapping-field .form-control').attr('attr-key') == 'bigint' ) ){
+            
+            var fieldVal = fieldInput.val();
+            var fieldData = fieldInput.parent().parent().find('.json-data-field').val();
+
+            if( fieldVal == '' ){
+                var inputId = fieldInput.attr('id');
+                fieldInput.parent().parent().find('.error-message').append('<label class="error invalid-feedback" for="'+inputId+'">Please select table field</label>');
+                mappingFlag = false; 
+                valiDationFlag = false; 
+            } 
+
+            if( fieldData == '' ){
+                var inputId = fieldInput.attr('id');
+                fieldInput.parent().parent().find('.error-message').append('<label class="error invalid-feedback" for="'+inputId+'">Please enter value.</label>');
+                mappingFlag = false; 
+                valiDationFlag = false; 
+            } 
+        }
+        if( valiDationFlag == true ){
+            fieldInput.parent().parent().find('.error-message').append('<i class="far fa-check-circle" style="color:green"></i>');
+            mappingFlag = true; 
+        }
+    });
+    return mappingFlag;
+}
 $(document).ready(function () {
     $('.nav-tabs > li a[title]').tooltip();
     
@@ -15,7 +62,7 @@ $(document).ready(function () {
             var flag = 1;
             var tableListLength = $('#table_list').find(":selected").val();
             var jsonUploadfile = $('#json_file').prop('files').length;
-            console.log( jsonUploadfile );
+
             if( jsonUploadfile == 0 ){
                 flag = 0;
                 addErrorMessage('json_file','Please Upload JSON file.')
@@ -69,9 +116,9 @@ $(document).ready(function () {
                             parentData.find('span.spinner').hide();
                             $(this).prop('disabled',false);
                             setTimeout(function(){
-                                $('#db_fields_mapping .col-md-6').each(function(){
-                                    if( $(this).find('.col-md-4 .form-control').hasClass('json-datetime') ){
-                                        var dateId = $(this).find('.col-md-4 .json-datetime').attr('id');
+                                $('#db_fields_mapping tr').each(function(){
+                                    if( $(this).find('td .form-control').hasClass('json-datetime') ){
+                                        var dateId = $(this).find('td .json-datetime').attr('id');
                                         $('#'+dateId).daterangepicker({
                                             autoUpdateInput: false,
                                             timePicker : true,
@@ -86,8 +133,8 @@ $(document).ready(function () {
                                             $('#'+dateId).val(from_date.format('MM-DD-YYYY HH:mm:ss'));
                                         });
                                     }
-                                    if( $(this).find('.col-md-4 .form-control').hasClass('json-year')){
-                                        var dateId = $(this).find('.col-md-4 .json-year').attr('id');
+                                    if( $(this).find('td .form-control').hasClass('json-year')){
+                                        var dateId = $(this).find('td .json-year').attr('id');
                                         $('#'+dateId).datepicker({
                                             format: "yyyy",
                                             viewMode: "years",
@@ -95,8 +142,8 @@ $(document).ready(function () {
                                         });
                                     }
 
-                                    if($(this).find('.col-md-4 .form-control').hasClass('json-time')){
-                                        var dateId = $(this).find('.col-md-4 .json-time').attr('id');
+                                    if($(this).find('td .form-control').hasClass('json-time')){
+                                        var dateId = $(this).find('td .json-time').attr('id');
                                         $('#'+dateId).daterangepicker({
                                             timePicker : true,
                                             singleDatePicker:true,
@@ -110,6 +157,11 @@ $(document).ready(function () {
                                         });
                                     }
                                 });
+                                fieldMapping();
+                                $('#db_fields_mapping .json-mapping-option').change(function(){
+                                    var selectVal = $(this).find(':selected').val();
+                                    $(this).parent().parent().find('.json-mapping-field input[type="text"]').val(selectVal);
+                                });
                                 var active = $('.wizard .nav-tabs li.active');
                                 active.next().removeClass('disabled');
                                 nextTab(active);
@@ -122,39 +174,8 @@ $(document).ready(function () {
                 return false;
             }
         } else if( parentId == 'fieldmapping') {
-            $('.json-mapping-option').change(function(){
-                var selectOption = $(this).val();
-                $(this).parent().parent().find('.json-mapping-field input[type="text"]').val(selectOption);
-            });
-            var mappingFlag = true; 
-            $('tbody#db_fields_mapping tr').each(function(){
-                if( ( $(this).find('td.json-mapping-field .form-control').attr('attr-key') == 'datetime' ) || ( $(this).find('td.json-mapping-field .form-control').attr('attr-key') == 'bigint' ) ){
-                    var fieldInput = $(this).find('td.mapping select[name="select_db_field[]"]');
-                    var fieldVal = fieldInput.val();
-                    var fieldData = fieldInput.parent().parent().find('.json-data-field').val();
-                    /*console.log( fieldInput.parent().parent().attr('class')  )
-                    console.log( fieldInput.parent().parent().find('.error-message').attr('class') );*/
-
-                    fieldInput.parent().parent().find('.error-message').empty();
-                    if( fieldVal == '' ){
-                        var inputId = fieldInput.attr('id');
-                        fieldInput.parent().parent().find('.error-message').append('<label class="error invalid-feedback" for="'+inputId+'">Please select Table field.</label>');
-                        mappingFlag = false; 
-                    } 
-
-                    if( fieldData == '' ){
-                        var inputId = fieldInput.attr('id');
-                        fieldInput.parent().parent().find('.error-message').append('<label class="error invalid-feedback" for="'+inputId+'">Please enter value.</label>');
-                        mappingFlag = false; 
-                    } 
-                    console.log(mappingFlag);
-                }
-            });
-            $('tbody#db_fields_mapping tr').each(function(){
-                console.log( $(this).find('td.validation .json-mapping-option:selected').val() );
-            });
-            
-            if( mappingFlag == true ){
+            var flagResponse = fieldMapping();
+            if( flagResponse == true ){
                 var parentData = $(this).parent();
                 parentData.find('span.spinner').show();
                 var formData = $('form').serializeArray();

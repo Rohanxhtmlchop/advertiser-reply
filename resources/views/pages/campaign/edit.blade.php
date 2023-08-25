@@ -13,7 +13,7 @@
                                     <h4>Editing Campaign : {{ $campaign['campaign_payloads_id'] }} {{ $campaign['campaign_payloads_name'] }}</h4>
                                 </div>
                                 <div class="campaign-date text-center">
-                                    <span>Deal Valid From date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_from'])) }} to Till date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_to'])) }}  Deal Year {{ $campaign['campaigns_year'] }}</span>
+                                    <span>Add Deal Number between Deal {{ $campaign['campaigns_deal_id'] }} Valid From date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_from'])) }} to Till date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_to'])) }}  Deal Year {{ $campaign['campaigns_year'] }}</span>
                                 </div>
                             </div>
                             <form method="post" id="edit_campaign">
@@ -38,7 +38,7 @@
                                             <a id="cpm-imp" href="#pane-B" class="nav-link" data-toggle="tab" role="tab" aria-controls="cpm-imp" aria-selected="false"><i class="fa fa-eye" aria-hidden="true"></i>CPM/IPM</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a id="flighting" href="#pane-C" class="nav-link" data-toggle="tab" role="tab" aria-controls="flighting" aria-selected="false" ><i class="fa fa-calendar-o" aria-hidden="true"></i>Flighting</a>
+                                            <a id="flighting" href="#pane-C" class="nav-link" data-toggle="tab" role="tab" aria-controls="flighting" aria-selected="false" ><i class="fa fa-calendar-o" aria-hidden="true"></i>Flight Start & End Date</a>
                                         </li>
                                         <li class="nav-item">
                                             <a id="summary" href="#pane-D" class="nav-link" data-toggle="tab" role="tab" aria-controls="summary" aria-selected="false" ><i class="fa fa-file-text" aria-hidden="true"></i>Summary</a>
@@ -58,6 +58,7 @@
                                             <div id="collapse-A" class="collapse show" data-bs-parent="#content" role="tabpanel" aria-labelledby="heading-A">
                                                 <div class="card-body">
                                                     <div class="row">
+                                                        <input type="hidden" id="advertiser_name" name="advertiser_name" value="{{ Session::get('advertiser_name')}}">
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="campaign_number">Campaign Number</label>
                                                             <input type="text" id="campaign_number" class="au-input au-input--full form-control campaign_number" name="campaign_number" value="" disabled="">
