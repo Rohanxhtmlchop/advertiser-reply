@@ -48,8 +48,8 @@ function dataAppend( fieldClass, fieldValue, flag = 0, fieldName = '' ){
     var getAdvertiserName = $('#advertiser_name').val();
     $('.send-to-approval').prop("disabled", false);
     $(fieldClass).addClass('bg-active');
-    $('#summary .date_change').addClass('bg-active').text(currentDate);
-    $('#summary .chnage_by').addClass('bg-active').text(getAdvertiserName);
+    $('#summary .date_change').addClass('bg-active').val(currentDate);
+    $('#summary .chnage_by').addClass('bg-active').val(getAdvertiserName);
   }
   if( ( fieldName != '' ) && ( fieldValue ==  fieldName ) ){
     $(fieldClass).removeClass('bg-active');
@@ -78,6 +78,9 @@ function errorNotification( message ){
   $(".sendButton .close").click(function(){
       $(".alert-notification-error").hide('medium');
   });
+}
+function jsonErrorMessage(className, message){
+  $('.tr-shadow .'+className).empty().append('<label class="error invalid-feedback">'+message+'</label>');
 }
 
 function addErrorMessage(name, message){

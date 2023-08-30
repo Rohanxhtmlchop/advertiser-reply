@@ -187,7 +187,7 @@ $(document).ready(function () {
                     success: function(response){
                         parentData.find('span.spinner').hide();
                         if( response.status == 0 ){
-                            errorNotification( response.message )
+                            jsonErrorMessage( response.class, response.message )
                             return false;
                         }else{
                             $('#preview .table-field-list').empty();
@@ -230,7 +230,6 @@ $(document).ready(function () {
             active.next().removeClass('disabled');
             nextTab(active);
         }
-
     });
     $(".prev-step").click(function (e) {
         var active = $('.wizard .nav-tabs li.active');

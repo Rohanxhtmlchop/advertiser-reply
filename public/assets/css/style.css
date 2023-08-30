@@ -94,11 +94,11 @@ margin-right: 10px;color: #afafaf;}
 /* .responsive-tabs .nav-tabs .nav-link:after{content: "\f105";font: normal normal normal 14px/1 FontAwesome;position: absolute;font-size: 20px; right: 16px;top: 50%;
 -webkit-transform: translate(0, -50%);-moz-transform: translate(0, -50%);-ms-transform: translate(0, -50%);-o-transform: translate(0, -50%);
 transform: translate(0, -50%);} */
-.campaign-number-time-sec{position: absolute;right: 15px;top: 0;text-align: right;}
+.campaign-number-time-sec{position: absolute;right: 15px;top: 0;text-align: right;width: 42%;}
 .campaign-number-time-sec .campaign-number{text-align: right !important;}
 .campaign-number-time-sec .campaign-date{text-align: right !important;}
-.campaign-number h4{margin-bottom: 0px;font-size: 16px;line-height: 1.5;}
-.campaign-date span{display: block;font-size: 12px;font-weight: 500;}
+.campaign-number h4{margin-bottom: 0px;font-size: 14px;line-height: 1.5;}
+.campaign-date span{display: block;font-size: 10px;font-weight: 500;}
 table.dataTable.table-striped>tbody>tr>td{ vertical-align: middle;}
 .form-check-input{border-color: #6455b3;width: 16px;height: 16px;}
 .form-check-input:checked{background-color: #6455b3;border-color: #6455b3;}
@@ -168,10 +168,12 @@ input[type=number] { -moz-appearance: textfield; }
 .step-form-sec{display: flex;align-items: center;}
 .signup-step-container{padding: 30px 0px !important;}
 .step-form-sec .section__content{width: 100%;}
-.json-mapping-view-sec #db_fields_mapping td.error-message i{color:green;}
+.json-mapping-view-secÂ #db_fields_mapping td.error-message i{color:green;}
 .json-mapping-view-sec #db_fields_mapping .error-message i.fa-times-circle{color:red;}
 .json-mapping-view-sec { table-layout: fixed; }
-
+select.form-control{-webkit-appearance: auto;-moz-appearance: auto;appearance: auto;}
+.email-otp-number input{text-align: center;}
+.media-sec select{-webkit-appearance: none;}
 @media (min-width: 1400px){
     .advertiser-view .head h2{width: calc(100% - 340px);padding-right: 5px;}
 }
@@ -201,10 +203,12 @@ input[type=number] { -moz-appearance: textfield; }
   .responsive-tabs .card .card-header {display: none;}
   .responsive-tabs .card .collapse {display: block;}
 }
+@media (max-width: 1490px){
+  .campaign-number-time-sec{max-width: 217px;}
+  .campaign-edit .deal-view-box{padding-top: 70px;}
+}
 @media (max-width: 1399px){
     .card .advertiser-view .head h2{text-align: center;margin-bottom: 10px !important;}
-    .campaign-number-time-sec{max-width: 217px;}
-    .campaign-edit .deal-view-box{padding-top: 35px;}
     .campaign-number h4{font-size: 14px;}
     .campaign-date span{font-size: 10px;}
     .responsive-tabs .nav-tabs .nav-link{padding: 15px 10px;}
@@ -216,7 +220,10 @@ input[type=number] { -moz-appearance: textfield; }
    .account-info-main, .bar-icon-box, .client-info{width: auto;}
    .client-info-box{padding: 25px;}
    .deal-view-sec .deal-view .col, .campaign-view-sec .deal-view .col {width: 25%;flex: 0 0 auto;}
-   
+   .card .head{min-height:auto;}
+   .campaign-number-time-sec{max-width:100%;width: 100%;}
+   .campaign-edit .deal-view-box{padding-top: 0px;}
+   .campaign-number-time-sec .campaign-number, .campaign-number-time-sec .campaign-date{text-align: center !important;}
 }
 @media (max-width: 1090px){
   .create-campaign-btn .flight-range{right: 20px !important;}
@@ -232,7 +239,7 @@ input[type=number] { -moz-appearance: textfield; }
     .header-desktop {height: auto;position: fixed;top: 27px;right: 0;width: auto;border: none;left: auto;z-index: 1111;background: none;}
     .header-wrap-box{justify-content: flex-end !important;}
     .main-content{padding-top: 20px;}
-    .header-mobile .navbar-mobile{top: 106px;}
+    .header-mobile .navbar-mobile{top: 81px;}
     .deal-view-sec .deal-view, .campaign-view-sec .deal-view{flex-wrap: wrap}
     .deal-view-sec .deal-view .col, .campaign-view-sec .deal-view .col{width: 33.33%;flex: 0 0 auto;}
     .header-mobile .header-mobile-inner{justify-content: center;position: relative;}
@@ -243,11 +250,13 @@ input[type=number] { -moz-appearance: textfield; }
     .account-item > .content{margin-left: 0px;padding-left: 0px;}
     .account-info-main{column-gap: 15px;}
     .account-item .image{width: 30px;height: 30px;}
-    .account-item .image i{font-size: 30px;color: #a5c32a;}
+    .account-item .image i{font-size: 28px;color: #a5c32a;}
     .header-desktop .container-fluid{padding: 0px;}
     .account-dropdown:after{right: 10px;}
     .account-dropdown{width: 300px;min-width: inherit;top: 70px;}
     .account-item > .content{padding: 0px;}
+    .au-btn{padding: 0 15px !important;}
+    .login-content{padding: 20px;}
 }
 @media (max-width: 767px) {
   .responsive-tabs .tab-pane {display: block !important;opacity: 1;}
@@ -278,6 +287,14 @@ input[type=number] { -moz-appearance: textfield; }
   .wizard{padding: 60px 15px 30px 15px;}
   .wizard ul.list-inline, .wizard ul.list-inline li, .wizard ul.list-inline li .btn{width: 100%;}
   .wizard ul.list-inline li .btn{margin-top: 10px;}
+  .account-info-main{column-gap: 10px;}
+  .header-mobile-inner a.logo{max-width:160px;}
+  .custom-table tr th, .custom-table tr td{min-width: 100px;}
+  .submit-sec .spinner-border-sm{margin-left: -109px !important;}
+  .au-btn{font-size: 14px;}
+  .email-otp-sec{text-align: center;}
+  .email-otp-number{justify-content: center;}
+  .email-otp-number input{max-width: 40px;}
 }
 @media (max-width: 575px) {
     .deal-view-sec .deal-view .col, .campaign-view-sec .deal-view .col{width: 100%;flex: 0 0 auto;}

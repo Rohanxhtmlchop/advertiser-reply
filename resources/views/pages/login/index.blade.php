@@ -18,7 +18,7 @@
                             <div class="alert alert-notification text-center mb-3" role="alert"></div>
                             <form id="login_form" method="post">   
                                 @csrf
-                                <div class="col-md-12 user-sec">
+                                <div class="user-sec">
                                     <div class="row">
                                         <div class="col-md-4 form-group">
                                             <label for="user_name">User Name</label>
@@ -28,7 +28,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 password-sec">
+                                <div class="password-sec">
                                     <div class="row">
                                         <div class="col-md-4 form-group">
                                             <label for="password">Password</label>
@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 media-sec">
+                                <div class="media-sec">
                                     <div class="row">
                                         <div class="col-md-4 form-group">
                                             <label for="password">Media Line</label>
@@ -67,25 +67,21 @@
                             <div class="alert alert-notification text-center mb-3" role="alert"></div>
                             <form id="verify_account_form" method="post">   
                                 @csrf
-                                <div class="col-md-12 email-otp-sec">
+                                <div class="email-otp-sec">
                                     <div class="row">
                                         <div class="col-md-4 form-group">
                                             <label for="password">Email OTP</label>
                                         </div>
                                         <div class="col-md-8 form-group">
-                                            <div class="col-md-12">
-                                                <div class="row ">
-                                                    <div class="email-otp-number d-flex">
-                                                        <input class="form-control rounded mr-2" type="number" id="first" name="first" data-next="second"  maxlength="1" /> 
-                                                        <input class="form-control rounded mr-2" type="number" id="second"  name="second" data-next="third" data-previous="second" maxlength="1" /> 
-                                                        <input class="form-control rounded mr-2" type="number" id="third"  name="third" data-next="fourth"  data-previous="third" maxlength="1" /> 
-                                                        <input class="form-control rounded mr-2" type="number" id="fourth" name="fourth" data-next="fifth"  data-previous="fourth" maxlength="1" /> 
-                                                        <input class="form-control rounded mr-2" type="number" id="fifth" name="fifth" data-next="sixth" data-previous="fifth" maxlength="1" /> 
-                                                        <input class="form-control rounded mr-2" type="number" id="sixth" name="sixth" data-previous="sixth" maxlength="1" /> 
-                                                    </div>
-                                                </div>
+                                            <div class="email-otp-number d-flex">
+                                                <input class="form-control rounded mr-2" type="number" id="first" name="first" data-next="second"  maxlength="1" /> 
+                                                <input class="form-control rounded mr-2" type="number" id="second"  name="second" data-next="third" data-previous="second" maxlength="1" /> 
+                                                <input class="form-control rounded mr-2" type="number" id="third"  name="third" data-next="fourth"  data-previous="third" maxlength="1" /> 
+                                                <input class="form-control rounded mr-2" type="number" id="fourth" name="fourth" data-next="fifth"  data-previous="fourth" maxlength="1" /> 
+                                                <input class="form-control rounded mr-2" type="number" id="fifth" name="fifth" data-next="sixth" data-previous="fifth" maxlength="1" /> 
+                                                <input class="form-control rounded" type="number" id="sixth" name="sixth" data-previous="sixth" maxlength="1" /> 
                                             </div>
-                                            <div class="col-md-12 mt-3">
+                                            <div class="mt-3">
                                                 <div class="row">
                                                     <div class="col-md-6 email-time">
                                                         <span>Time: <b class="counter">5:00</b></span>

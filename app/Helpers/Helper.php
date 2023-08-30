@@ -344,7 +344,7 @@ class Helper{
             case "boolean":
                 $selectFirst = ( $fieldsVal == 0 )?'selected="selected"':""; 
                 $selectSecond = ( $fieldsVal == 1 )?'selected="selected"':""; 
-                $input = '<select name="db_field_name[]" id="db_field_name_'.$fieldId.'" attr-key="boolean" class="au-input au-input--full valid json-data-field" aria-invalid="false">
+                $input = '<select name="db_field_name[]" id="db_field_name_'.$fieldId.'" attr-key="boolean" class="au-input au-input--full valid json-data-field form-control" aria-invalid="false">
                 <option value=""'.$selectFirst.'>0</option><option value="1" '.$selectSecond.'>1</option></select>';
                 break;
         }

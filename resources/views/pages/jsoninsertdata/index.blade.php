@@ -73,8 +73,8 @@
                                             </div>
                                             <div class="tab-pane" role="tabpanel" id="fieldmapping">
                                                 <h4 class="text-center">Field Mapping</h4>
-                                                <div class="row" >
-                                                    <table class="table custom-table table-borderless table-striped dataTable no-footer json-mapping-view-sec" style="width:100%">
+                                                <div class="table-responsive" >
+                                                    <table class="table custom-table table-borderless table-striped dataTable no-footer json-mapping-view-sec" id="json-mapping-view-sec" style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>Field Name</th>

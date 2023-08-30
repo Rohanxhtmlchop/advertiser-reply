@@ -153,6 +153,10 @@ $(document).ready(function(){
                         dataValue('input[name="demo_name"]', campaignArrayData.demographics_name)
                         dataValue('input[name="ad_length"]', campaignArrayData.inventory_length)
                         dataValue('input[name="ad_length_old"]', campaignArrayData.inventory_length)
+                        dataValue('input[name="created_by_old"]', campaignArrayData.created_by)
+                        dataValue('input[name="created_date_old"]', campaignArrayData.created_at)
+                        dataValue('input[name="change_by_old"]', campaignArrayData.updated_by)
+                        dataValue('input[name="change_date_old"]', campaignArrayData.updated_at)
                         $('input[name="ad_length"]').daterangepicker({
                             timePicker : true,
                             singleDatePicker:true,
@@ -177,8 +181,6 @@ $(document).ready(function(){
                         }, (from_date) => {
                             $('input[name="flight_start_date"]').val(from_date.format('MM/DD/YYYY'));
                         });
-
-                        
                         $('input[name="flight_end_date"]').daterangepicker({
                             autoUpdateInput: false,
                             minDate:campaignArrayData.valid_from,
@@ -275,7 +277,8 @@ $(document).ready(function(){
                         dataAppend('#summary .grp', campaignArrayData.grp);
                         dataAppend('#summary .cpm', campaignArrayData.cpm);
                         dataAppend('#summary .campaign_number, #new_campaign_table .new-campaign-id, #old_campaign_table .old-campaign-id', campaignArrayData.campaign_id );
-                        dataAppend('#summary .campaign_name, #new_campaign_table .new-campaign-name, #old_campaign_table .old-campaign-name', campaignArrayData.name);
+                        dataValue('#summary .campaign_name', campaignArrayData.name );
+                        dataAppend('#new_campaign_table .new-campaign-name, #old_campaign_table .old-campaign-name', campaignArrayData.name);
                         dataAppend('#new_campaign_table .new-campaign-deal-name, #old_campaign_table .old-campaign-deal-name', campaignArrayData.deal_payloads_name);
                         dataAppend('#new_campaign_table .new-campaign_day-time, #old_campaign_table .old-campaign_day-time', campaignArrayData.day_time );
                         dataAppend('#summary .brand_name, #new_campaign_table .new-campaign-brand, #old_campaign_table .old-campaign-brand', campaignArrayData.brand_name);

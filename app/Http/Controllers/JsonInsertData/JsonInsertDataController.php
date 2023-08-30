@@ -118,6 +118,7 @@ class JsonInsertDataController extends Controller
     public function jsonMappingData( Request $request ){
         $advertiserId = Session::get('advertiser_id');
         $clientId = Session::get('clients_id');
+        $mediasId = Session::get('medias_id');
         if( count( $request['data'] ) > 0 ){
             $tableFields = Helper::tableOfFields($request['data']);
             $data = '';
@@ -133,13 +134,24 @@ class JsonInsertDataController extends Controller
                 $checkDealCount = DealPayload::join('deals', 'deals.deal_payload_id', '=', 'deals.id')
                 ->where('deals.advertiser_id',$advertiserId)
                 ->where('deals.client_id',$clientId)->count();
+
+                $checkCampaignCount = CampaignPayload::join('campaigns', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
+                    ->where('campaign_payloads.name','=',$tableFields['campaign_payload_name'])
+                    ->where('campaigns.advertiser_id','=',$advertiserId)
+                    ->where('campaigns.client_id','=',$clientId)
+                    ->where('campaigns.media_id','=',$mediasId)
+                    ->count();
+                $checkDealPayloadCount = DealPayload::join('deals', 'deals.deal_payload_id', '=', 'deal_payloads.id')
+                    ->where('deal_payloads.name','=',$tableFields['deal_name'])
+                    ->where('deals.advertiser_id','=',$advertiserId)
+                    ->where('deals.client_id','=',$clientId)
+                    ->where('deals.media_id','=',$mediasId)
+                    ->count();
                 if( ( !is_numeric($tableFields['campaign_payload_name']) ) && ( $checkCampaignCount != 0 ) ){
                     $data = array( 'status' => 0 , 'class' => 'campaign_payload_name', 'message' => 'Campaign Name already Exists.');
                 } else if( $checkDealPayloadCount == 0 ){
-                    $data = array( 'status' => 0 ,  'class' => 'deal_name', 'message' => 'Deal Name was not Exists.');
-                } else if ( ( $checkDealCount == 0 ) && ( $checkDealCount > 1 )  ){
-                    $data = array( 'status' => 0 ,  'class' => 'deal_name', 'message' => 'Please Check Deal was Not added');
-                }
+                    $data = array( 'status' => 0 ,  'class' => 'deal_name', 'message' => 'Deal Name was not Exists. Please create Deal');
+                } 
             } else {
                 $validFrom = date('m-d-Y hh:mm:ss', strtotime($tableFields['valid_from']));
                 $validTo = date('m-d-Y hh:mm:ss', strtotime($tableFields['valid_to']));
@@ -209,6 +221,7 @@ class JsonInsertDataController extends Controller
                         $dealpayloadInsert = CampaignPayload::create($dealPayloadFieldArray);
                     }
                 }
+
                 if( !empty( $dealpayloadInsert->id ) ){
                     $insertPayloadId = $dealpayloadInsert->id;
                     $dealTableFieldArray = Helper::jsonDataGetSpecificTableList($tableName);
@@ -246,37 +259,58 @@ class JsonInsertDataController extends Controller
                     $data = array( 'status' => 0 , 'message' => 'Data Was Not Inserted.');
                 }
             } else {
-                /*$dealTableFieldArray = Helper::jsonDataGetSpecificTableList($tableName);
-                print_r($dealPayloadFieldArray);
-                $dealInsertArray = [];
-                foreach( $dealTableFieldArray as $dealTableFieldVal){
-                    if( str_contains($dealTableFieldVal, '_id')){
-                        $newName = str_replace("_id","_name",$dealTableFieldVal);
-                        $dealInsertArray[$dealTableFieldVal] = $tableFields[$newName];
-                    } else{ 
-                        $fieldValue = ( array_key_exists($dealTableFieldVal,$tableFields) ) ? $tableFields[$dealTableFieldVal] : null;
-                        $dealInsertArray[$dealTableFieldVal] = $fieldValue;
+                if( $tableName == 'campaign'){
+                    $campaignIdArray = Campaigns::join('campaign_payloads', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
+                    ->where('campaigns.advertiser_id', '=', $advertiserId)
+                    ->where('campaigns.client_id','=',$clientId)
+                    ->where('campaigns.media_id', '=', $mediasId)
+                    ->where('campaigns.id', '=', $dealPayloadFieldArray['name'])
+                    ->first(['campaign_payloads.id as cam_pay_id'])
+                    ->toArray();
+
+                    $dealTableFieldArray = Helper::jsonDataGetSpecificTableList($tableName);
+                    $dealPayloadFieldArray['updated_by'] = $userId;
+                    $dealPayloadFieldArray['change_by'] = $userId;
+                    $dealPayloadFieldArray['date_change'] = date('Y-m-d');
+                    unset($dealPayloadFieldArray['name']);
+                    unset($dealPayloadFieldArray['created_at']);
+                    unset($dealPayloadFieldArray['created_by']);
+                    $updateCampaignPayload = CampaignPayload::where('id','=',$campaignIdArray['cam_pay_id'])->update($dealPayloadFieldArray);
+                    
+                    $dealInsertArray = [];
+                    foreach( $dealTableFieldArray as $dealTableFieldVal){
+                        if( str_contains($dealTableFieldVal, '_id')){
+                            $newName = str_replace("_id","_name",$dealTableFieldVal);
+                            $dealInsertArray[$dealTableFieldVal] = $tableFields[$newName];
+                        } else{ 
+                            $fieldValue = ( array_key_exists($dealTableFieldVal,$tableFields) ) ? $tableFields[$dealTableFieldVal] : null;
+                            $dealInsertArray[$dealTableFieldVal] = $fieldValue;
+                        }
                     }
+                    $dealFieldArray = Helper::addfieldsValue($dealInsertArray);
+                    $dealFieldArray['advertiser_id'] = $advertiserId;
+                    $dealFieldArray['client_id'] = $clientId;
+                    $inserData = Helper::insertData($dealFieldArray);
+                    $updateCampaignId = $inserData['campaign_payload_id'];
+                    $inserData['updated_by'] = $userId;
+                    unset($inserData['campaign_payload_id']);
+                    unset($inserData['created_at']);
+                    unset($inserData['created_by']);
+                    if( $updateCampaignPayload == 1 ){
+                        $updateCampaign = Campaigns::where('id','=',$updateCampaignId)
+                        ->where('advertiser_id','=',$advertiserId)
+                        ->where('client_id','=',$clientId)
+                        ->where('media_id','=',$mediasId)
+                        ->update($inserData);
+                        if( $updateCampaign == 1 ){
+                            $data = array( 'status' => 1 , 'message' => 'Data Successfully Updated.');
+                        }
+                    }   
                 }
-                $dealFieldArray = Helper::addfieldsValue($dealInsertArray);
-                $dealFieldArray['advertiser_id'] = $advertiserId;
-                $dealFieldArray['client_id'] = $clientId;
-                $inserData = Helper::insertData($dealFieldArray);
-                $updateCampaignId = $inserData['campaign_payload_id'];
-                $inserData['updated_by'] = $userId;
-                unset($inserData['campaign_payload_id']);
-                unset($inserData['created_at']);
-                unset($inserData['created_by']);
-                $updateCampaign = Campaigns::where('id','=',$updateCampaignId)
-                    ->where('advertiser_id','=',$advertiserId)
-                    ->where('client_id','=',$clientId)
-                    ->where('media_id','=',$mediasId)
-                    ->update($inserData);
-                echo $updateCampaign;*/
             }          
         } else { 
-            $data = array( 'status' => 0 , 'message' => 'Please check Data.');
+            $data = array( 'status' => 1 , 'message' => 'Data Successfully Updated.');
         }
-        //return response()->json($data);  
+        return response()->json($data);  
     }
 }
