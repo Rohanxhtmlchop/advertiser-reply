@@ -220,6 +220,9 @@ class DashboardController extends Controller
 
     public function dashboardAdvertiserFilter( Request $request){
         $allStatusArray = Helper::dealStatusArray();
+        $advertiserId = Session::get('advertiser_id');
+        $clientId = Session::get('clients_id');
+        $mediasId = Session::get('medias_id');
         $advertiserDashboardArray = [];
         if( $request->data !== null ){
             $data = $request->data;
@@ -227,7 +230,13 @@ class DashboardController extends Controller
                 foreach( $allStatusArray as $allStatusArrayKey => $allStatusArrayVal  ){
                     $statusName = strtolower($allStatusArrayVal['name']);
                     $data = $request->data;
-                    $advertiserData = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')->whereDate('deal_payloads.flight_start_date', '>=', $data['start_date'])->whereDate('deal_payloads.flight_end_date', '<=', $data['end_date'])->where('deals.status',$allStatusArrayVal['id'])->count();
+                    $advertiserData = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
+                                    ->whereDate('deal_payloads.flight_start_date', '>=', $data['start_date'])
+                                    ->whereDate('deal_payloads.flight_end_date', '<=', $data['end_date'])
+                                    ->where('deals.advertiser_id','=', $advertiserId)
+                                    ->where('deals.client_id','=', $clientId)
+                                    ->where('deals.media_id','=', $mediasId)
+                                    ->where('deals.status',$allStatusArrayVal['id'])->count();
                     $advertiserDashboardArray[$statusName] = $advertiserData;
                 }
             }
@@ -236,7 +245,11 @@ class DashboardController extends Controller
                 foreach( $allStatusArray as $allStatusArrayKey => $allStatusArrayVal  ){
                     $statusName = strtolower($allStatusArrayVal['name']);
                     $data = $request->data;
-                    $advertiserData = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')->where('deals.status',$allStatusArrayVal['id'])->count();
+                    $advertiserData = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
+                                        ->where('deals.advertiser_id','=', $advertiserId)
+                                        ->where('deals.client_id','=', $clientId)
+                                        ->where('deals.media_id','=', $mediasId)
+                                        ->where('deals.status',$allStatusArrayVal['id'])->count();
                     $advertiserDashboardArray[$statusName] = $advertiserData;
                 }
             }

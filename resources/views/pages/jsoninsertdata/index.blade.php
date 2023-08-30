@@ -50,14 +50,14 @@
                                                                 <label for="table_list">Table List</label>
                                                             </div>
                                                             <div class="col-md-8 form-group">
-                                                            @if( count( $tableList ) > 0 )
-                                                                <select name="table_list" id="table_list"  class="au-input au-input--full valid" aria-invalid="false">
-                                                                    <option value="">Table Option</option>
-                                                                    @foreach( $tableList as $tableListKey => $tableListVal )
-                                                                        <option value="{{ $tableListVal }}">{{ ucwords($tableListVal) }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            @endif
+                                                                @if( count( $tableList ) > 0 )
+                                                                    <select name="table_list" id="table_list"  class="au-input au-input--full valid form-control" aria-invalid="false">
+                                                                        <option value="">Table Option</option>
+                                                                        @foreach( $tableList as $tableListKey => $tableListVal )
+                                                                            <option value="{{ $tableListVal }}">{{ ucwords($tableListVal) }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -123,7 +123,6 @@
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
-                                        
                                     </form>
                                 </div>
                             </div>

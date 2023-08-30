@@ -22,37 +22,37 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-lg-4 col-xl-3 form-group">
-                                    <select name="deal_no" id="deal_no"  class="au-input au-input--full">
+                                    <select name="deal_no" id="deal_no"  class="au-input form-control au-input--full">
                                         <option value="">Deal</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3 form-group">
-                                    <select name="campaign" id="campaign"  class="au-input au-input--full">
+                                    <select name="campaign" id="campaign"  class="au-input form-control au-input--full">
                                         <option value="">Campaign</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3 form-group">
-                                    <select name="demographics" id="demographics"  class="au-input au-input--full">
+                                    <select name="demographics" id="demographics"  class="au-input form-control au-input--full">
                                         <option value="">Demographics</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3 form-group">
-                                    <select name="outlet" id="outlet"  class="au-input au-input--full">
+                                    <select name="outlet" id="outlet"  class="au-input form-control au-input--full">
                                         <option value="">Out Let</option>    
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3 form-group">
-                                    <select name="agency" id="agency"  class="au-input au-input--full">
+                                    <select name="agency" id="agency"  class="au-input form-control au-input--full">
                                         <option value="">Agency</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3 form-group">
-                                    <select name="location" id="location"  class="au-input au-input--full">
+                                    <select name="location" id="location"  class="au-input form-control au-input--full">
                                         <option value="">Location</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3 form-group">
-                                    <select name="brand" id="brand"  class="au-input au-input--full">
+                                    <select name="brand" id="brand"  class="au-input form-control au-input--full">
                                         <option value="">Brand</option>
                                     </select>
                                 </div>

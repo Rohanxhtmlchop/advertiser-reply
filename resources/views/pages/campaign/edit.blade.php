@@ -58,7 +58,7 @@
                                             <div id="collapse-A" class="collapse show" data-bs-parent="#content" role="tabpanel" aria-labelledby="heading-A">
                                                 <div class="card-body">
                                                     <div class="row">
-                                                        <input type="hidden" id="advertiser_name" name="advertiser_name" value="{{ Session::get('advertiser_name')}}">
+                                                        <input type="hidden" id="advertiser_name" name="advertiser_name" value="{{ Session::get('user_name')}}">
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="campaign_number">Campaign Number</label>
                                                             <input type="text" id="campaign_number" class="au-input au-input--full form-control campaign_number" name="campaign_number" value="" disabled="">
@@ -121,6 +121,28 @@
                                                             <label for="budget">Budget</label>
                                                             <input type="text" id="budget"class="au-input au-input--full form-control"name="budget" value="" disabled="">
                                                         </div>
+                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                        </div>
+                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                            <label for="change_by">Created By</label>
+                                                            <input type="text" id="created_by"class="au-input au-input--full form-control"name="created_by_old" value="" disabled="">
+                                                        </div>
+                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                            <label for="change_by">Created Date</label>
+                                                            <input type="text" id="created_date"class="au-input au-input--full form-control"name="created_date_old" value="" disabled="">
+                                                        </div>
+                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                        </div>
+                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                        <label for="change_by">Change By</label>
+                                                            <input type="text" id="change_by"class="au-input au-input--full form-control"name="change_by_old" value="" disabled="">
+                                                        </div>
+                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                            <label for="change_by">Created Date</label>
+                                                            <input type="text" id="change_date"class="au-input au-input--full form-control"name="change_date_old" value="" disabled="">
+                                                        </div>
+                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                        </div>
                                                         <div class="btn-row mt-3 text-center">
                                                             <a href="javascript:void(0);" class="btn btn-lg btn-secondary tab-btn" attr-active="cpm-imp" >Go To CPM/IPM</a>
                                                         </div>
@@ -145,7 +167,7 @@
                                                                     <label for="realistic">Demographics</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <select name="demographic_name" class="au-input au-input--full" id="demographic_name" >
+                                                                    <select name="demographic_name" class="au-input au-input--full form-control" id="demographic_name" >
                                                                     <option value="">Demographic</option>
                                                                     @if( count( $demographicList ) > 0 )
                                                                         @foreach( $demographicList as $demographicListKey => $demographicListVal )
@@ -250,7 +272,7 @@
                                                         <div class="col-md-6">
                                                             <div class="row">
                                                                 <div class="col-md-6 form-group">
-                                                                    <select name="day_parts_id"class="au-input au-input--full" id="day_parts_id">
+                                                                    <select name="day_parts_id"class="au-input au-input--full form-control" id="day_parts_id">
                                                                     <option value="">Time / Day Part</option>
                                                                                 @if( count( $dayPartList ) > 0 )
                                                                                     @foreach( $dayPartList as $dayPartListKey => $dayPartListVal )
@@ -334,7 +356,7 @@
                                                         </div>
                                                         <div class="col-md-6 form-group-inline form-group col-xxl-4">
                                                             <label for="campaign_name">Campaign Name</label>
-                                                            <span class="campaign_name au-input au-input--full form-control disable-bg "></span>
+                                                            <input type="text" class="campaign_name au-input au-input--full form-control disable-bg" name="campaign_name_change" value="" disabled="">
                                                         </div>
                                                         <div class="col-md-6 form-group-inline form-group col-xxl-4">
                                                             <label for="brand_name">Brand</label>
@@ -378,11 +400,11 @@
                                                         </div>
                                                         <div class="col-md-6 form-group-inline form-group col-xxl-4">
                                                             <label for="date_change">Date Change</label>
-                                                            <span class="date_change au-input au-input--full form-control disable-bg "></span>
+                                                            <input type="text" class="date_change au-input au-input--full form-control disable-bg" name="date_change" value="" disabled="">
                                                         </div>
                                                         <div class="col-md-6 form-group-inline form-group col-xxl-4">
                                                             <label for="chnage_by">Change By</label>
-                                                            <span class="chnage_by au-input au-input--full form-control disable-bg "></span>
+                                                            <input type="text" class="chnage_by au-input au-input--full form-control disable-bg" name="chnage_by" value="" disabled="">
                                                         </div>
                                                     </div>
                                                     <div class="new-campaign-table mb-2">

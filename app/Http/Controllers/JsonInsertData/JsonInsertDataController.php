@@ -89,7 +89,7 @@ class JsonInsertDataController extends Controller
                                 $jsonHTML .= $jsonInput;
                             $jsonHTML .='</td>';
                             $jsonHTML .='<td class="form-group mapping">';
-                                $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid" aria-invalid="false">';
+                                $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid form-control" aria-invalid="false">';
                                     $jsonHTML .='<option value="">Table Fields Option</option>';
                                     foreach($tableFieldsList as $tableFieldsListKey => $tableFieldsListVal ){
                                         $selected  = ( $jsonFileFieldsKey == $tableFieldsListKey )? 'selected="selected"':'';
@@ -97,7 +97,7 @@ class JsonInsertDataController extends Controller
                                     }
                                 $jsonHTML .= '</select>';
                             $jsonHTML .='</td>';
-                            $jsonHTML .='<td class="form-group error-message">';
+                            $jsonHTML .='<td class="form-group error-message '.$jsonFileFieldsKey.'">';
                             $jsonHTML .='<i class="far fa-check-circle" style="color:green"></i>';
                             $jsonHTML .='</td>';
                        // $jsonHTML .='</div>';
@@ -125,7 +125,7 @@ class JsonInsertDataController extends Controller
             if( $tableName == 'deal' ){
                 $checkCount = DealPayload::where('name',$tableFields['deal_payload_name'])->count();
                 if( $checkCount != 0 ){
-                    $data = array( 'status' => 0 , 'message' => 'Deal Name already Exists.');
+                    $data = array( 'status' => 0 , 'class' => 'deal_payload_name', 'message' => 'Deal Name already Exists.');
                 }
             } else if( $tableName == 'campaign' ){
                 $checkCampaignCount = CampaignPayload::where('name',$tableFields['campaign_payload_name'])->count();
@@ -133,12 +133,12 @@ class JsonInsertDataController extends Controller
                 $checkDealCount = DealPayload::join('deals', 'deals.deal_payload_id', '=', 'deals.id')
                 ->where('deals.advertiser_id',$advertiserId)
                 ->where('deals.client_id',$clientId)->count();
-                if( $checkCampaignCount != 0 ){
-                    $data = array( 'status' => 0 , 'message' => 'Campaign Name already Exists.');
+                if( ( !is_numeric($tableFields['campaign_payload_name']) ) && ( $checkCampaignCount != 0 ) ){
+                    $data = array( 'status' => 0 , 'class' => 'campaign_payload_name', 'message' => 'Campaign Name already Exists.');
                 } else if( $checkDealPayloadCount == 0 ){
-                    $data = array( 'status' => 0 , 'message' => 'Deal Name was not Exists.');
+                    $data = array( 'status' => 0 ,  'class' => 'deal_name', 'message' => 'Deal Name was not Exists.');
                 } else if ( ( $checkDealCount == 0 ) && ( $checkDealCount > 1 )  ){
-                    $data = array( 'status' => 0 , 'message' => 'Please Check Deal was Not added');
+                    $data = array( 'status' => 0 ,  'class' => 'deal_name', 'message' => 'Please Check Deal was Not added');
                 }
             } else {
                 $validFrom = date('m-d-Y hh:mm:ss', strtotime($tableFields['valid_from']));
@@ -146,9 +146,9 @@ class JsonInsertDataController extends Controller
                 $flightStartDate = date('m-d-Y hh:mm:ss', strtotime($tableFields['flight_start_date']));
                 $flightEndDate = date('m-d-Y hh:mm:ss', strtotime($tableFields['flight_end_date']));
                 if( $validFrom >= $validTo ){ 
-                    $data = array( 'status' => 0 , 'message' => 'Please check Valid To & From Date.');
+                    $data = array( 'status' => 0 , 'class' => 'flight_start_date',  'message' => 'Please check Valid To & From Date.');
                 } else if( $flightStartDate >= $flightEndDate ){ 
-                    $data = array( 'status' => 0 , 'message' => 'Please check Flight End & Start Date.');
+                    $data = array( 'status' => 0 , 'class' => 'flight_end_date',  'message' => 'Please check Flight End & Start Date.');
                 }
             }
         
@@ -171,6 +171,8 @@ class JsonInsertDataController extends Controller
     public function InsertjsonData( Request $request ){
         $advertiserId = Session::get('advertiser_id');
         $clientId = Session::get('clients_id');
+        $mediasId = Session::get('medias_id');
+        $userId = Session::get('user_id');
         if( count( $request['data'] ) > 0 ){
             $tableFields = Helper::tableOfFields($request['data']);
             $removeArray = Helper::jsonDataTableList();
@@ -195,55 +197,86 @@ class JsonInsertDataController extends Controller
                 }
             }
             $dealPayloadFieldArray = Helper::addfieldsValue($dealPayloadInsertArray);
-            
-            if( $tableName == 'deal' ){
-                $dealpayloadInsert = DealPayload::create($dealPayloadFieldArray);
-            } else if($tableName == 'campaign'){
-                $checkCount = DealPayload::where('name', $tableFields['deal_name'])->count();
-                if( $checkCount == 0 ){
-                    $data = array( 'status' => 0 , 'message' => 'Deal Name not Exists.');
-                } else {
-                    $dealpayloadInsert = CampaignPayload::create($dealPayloadFieldArray);
+          
+            if( !is_numeric($dealPayloadFieldArray['name']) ){
+                if( $tableName == 'deal' ){
+                    $dealpayloadInsert = DealPayload::create($dealPayloadFieldArray);
+                } else if($tableName == 'campaign'){
+                    $checkCount = DealPayload::where('name', $tableFields['deal_name'])->count();
+                    if( $checkCount == 0 ){
+                        $data = array( 'status' => 0 , 'message' => 'Deal Name not Exists.');
+                    } else {
+                        $dealpayloadInsert = CampaignPayload::create($dealPayloadFieldArray);
+                    }
                 }
-            }
-            if( !empty( $dealpayloadInsert->id ) ){
-                $insertPayloadId = $dealpayloadInsert->id;
-                $dealTableFieldArray = Helper::jsonDataGetSpecificTableList($tableName);
-                $dealInsertArray = [];
-                if( count( $dealTableFieldArray ) > 0 ){
-                    foreach( $dealTableFieldArray as $dealTableFieldVal){
-                        if( str_contains($dealTableFieldVal, '_id')){
-                            $newName = str_replace("_id","_name",$dealTableFieldVal);
-                            $dealInsertArray[$dealTableFieldVal] = $tableFields[$newName];
-                        } else{ 
-                            $fieldValue = ( array_key_exists($dealTableFieldVal,$tableFields) ) ? $tableFields[$dealTableFieldVal] : null;
-                            $dealInsertArray[$dealTableFieldVal] = $fieldValue;
+                if( !empty( $dealpayloadInsert->id ) ){
+                    $insertPayloadId = $dealpayloadInsert->id;
+                    $dealTableFieldArray = Helper::jsonDataGetSpecificTableList($tableName);
+                    $dealInsertArray = [];
+                    if( count( $dealTableFieldArray ) > 0 ){
+                        foreach( $dealTableFieldArray as $dealTableFieldVal){
+                            if( str_contains($dealTableFieldVal, '_id')){
+                                $newName = str_replace("_id","_name",$dealTableFieldVal);
+                                $dealInsertArray[$dealTableFieldVal] = $tableFields[$newName];
+                            } else{ 
+                                $fieldValue = ( array_key_exists($dealTableFieldVal,$tableFields) ) ? $tableFields[$dealTableFieldVal] : null;
+                                $dealInsertArray[$dealTableFieldVal] = $fieldValue;
+                            }
                         }
-                    }
-                    $dealFieldArray = Helper::addfieldsValue($dealInsertArray);
-                    $dealFieldArray['advertiser_id'] = $advertiserId;
-                    $dealFieldArray['client_id'] = $clientId;
-                    $dealFieldArray[$payloadFieldName.'_id'] = $insertPayloadId;
-                    $inserData = Helper::insertData($dealFieldArray);
-                    if( $tableName == 'deal' ){
-                        $dealInsert = Deals::create($inserData);
-                    } else{
-                        $dealInsert = Campaigns::create($inserData);
-                    }
-                    if( !empty( $dealInsert->id ) ){
-                        $data = array( 'status' => 1 , 'message' => 'Data Successfully Inserted.');
+                        $dealFieldArray = Helper::addfieldsValue($dealInsertArray);
+                        $dealFieldArray['advertiser_id'] = $advertiserId;
+                        $dealFieldArray['client_id'] = $clientId;
+                        $dealFieldArray[$payloadFieldName.'_id'] = $insertPayloadId;
+                        $inserData = Helper::insertData($dealFieldArray);
+                        
+                        if( $tableName == 'deal' ){
+                            $dealInsert = Deals::create($inserData);
+                        } else{
+                            $dealInsert = Campaigns::create($inserData);
+                        }
+                        if( !empty( $dealInsert->id ) ){
+                            $data = array( 'status' => 1 , 'message' => 'Data Successfully Inserted.');
+                        } else { 
+                            $data = array( 'status' => 0 , 'message' => 'Data Was Not Inserted.');
+                        }
                     } else { 
                         $data = array( 'status' => 0 , 'message' => 'Data Was Not Inserted.');
                     }
                 } else { 
                     $data = array( 'status' => 0 , 'message' => 'Data Was Not Inserted.');
                 }
-            } else { 
-                $data = array( 'status' => 0 , 'message' => 'Data Was Not Inserted.');
-            }
+            } else {
+                /*$dealTableFieldArray = Helper::jsonDataGetSpecificTableList($tableName);
+                print_r($dealPayloadFieldArray);
+                $dealInsertArray = [];
+                foreach( $dealTableFieldArray as $dealTableFieldVal){
+                    if( str_contains($dealTableFieldVal, '_id')){
+                        $newName = str_replace("_id","_name",$dealTableFieldVal);
+                        $dealInsertArray[$dealTableFieldVal] = $tableFields[$newName];
+                    } else{ 
+                        $fieldValue = ( array_key_exists($dealTableFieldVal,$tableFields) ) ? $tableFields[$dealTableFieldVal] : null;
+                        $dealInsertArray[$dealTableFieldVal] = $fieldValue;
+                    }
+                }
+                $dealFieldArray = Helper::addfieldsValue($dealInsertArray);
+                $dealFieldArray['advertiser_id'] = $advertiserId;
+                $dealFieldArray['client_id'] = $clientId;
+                $inserData = Helper::insertData($dealFieldArray);
+                $updateCampaignId = $inserData['campaign_payload_id'];
+                $inserData['updated_by'] = $userId;
+                unset($inserData['campaign_payload_id']);
+                unset($inserData['created_at']);
+                unset($inserData['created_by']);
+                $updateCampaign = Campaigns::where('id','=',$updateCampaignId)
+                    ->where('advertiser_id','=',$advertiserId)
+                    ->where('client_id','=',$clientId)
+                    ->where('media_id','=',$mediasId)
+                    ->update($inserData);
+                echo $updateCampaign;*/
+            }          
         } else { 
             $data = array( 'status' => 0 , 'message' => 'Please check Data.');
         }
-        return response()->json($data);  
+        //return response()->json($data);  
     }
 }

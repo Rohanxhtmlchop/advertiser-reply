@@ -11,7 +11,7 @@
                                 <h2 class="mb-0">Deal View</h2>
                                 <div class="d-flex align-items-center flight-range select">
                                     <div class="daterange d-flex align-items-center">
-                                        <select name="deal_status" id="deal_status" class="au-input" >
+                                        <select name="deal_status" id="deal_status" class="au-input form-control" >
                                             <option value="">Status</option>
                                             @if( count( $dealStatus ) > 0 )
                                                 @foreach( $dealStatus as $dealStatusKey => $dealStatusVal )

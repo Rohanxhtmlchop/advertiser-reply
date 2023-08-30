@@ -58,7 +58,7 @@
                                             <ul class="client-info">
                                                 @if(Session::has('clent_name'))
                                                     <li>
-                                                        <span>Client Name</span>
+                                                        <span>Broadcaster Name</span>
                                                             <b>{{ Session::get('clent_name')}}</b>
                                                     </li>
                                                 @endif

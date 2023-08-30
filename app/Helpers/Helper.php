@@ -345,7 +345,7 @@ class Helper{
                 $selectFirst = ( $fieldsVal == 0 )?'selected="selected"':""; 
                 $selectSecond = ( $fieldsVal == 1 )?'selected="selected"':""; 
                 $input = '<select name="db_field_name[]" id="db_field_name_'.$fieldId.'" attr-key="boolean" class="au-input au-input--full valid json-data-field" aria-invalid="false">
-                <option value="0"'.$selectFirst.'>0</option><option value="1" '.$selectSecond.'>1</option></select>';
+                <option value=""'.$selectFirst.'>0</option><option value="1" '.$selectSecond.'>1</option></select>';
                 break;
         }
         return  $input;
@@ -404,14 +404,19 @@ class Helper{
         return $tableData;
     }
 
-    public static function createTableFieldDropdown($fieldName,$dropdownArray,$fieldValue){
+    public static function createTableFieldDropdown($fieldName,$dropdownArray,$fieldValue,$flag){
         $dropdownHTML = "";
         if( count( $dropdownArray ) > 0 ){
-            $dropdownHTML .= '<select name="'.$fieldName.'" class="au-input au-input--full json-mapping-option">';
+            $dropdownHTML .= '<select name="'.$fieldName.'" class="au-input au-input--full form-control json-mapping-option">';
                 $dropdownHTML .= '<option value="">Select Option</option>';
                 foreach( $dropdownArray as $dropdownArrayKey => $dropdownArrayValue ){
-                    $selected = ( $fieldValue == $dropdownArrayValue['name'] ) ? 'selected="selected"' : "";  
-                    $dropdownHTML .= '<option value="'.$dropdownArrayValue['name'].'" '.$selected.'>'.$dropdownArrayValue['name'].'</option>';
+                    if( $flag == 1 ){
+                        $selected = ( $fieldValue == $dropdownArrayValue['id'] ) ? 'selected="selected"' : ""; 
+                        $dropdownHTML .= '<option value="'.$dropdownArrayValue['id'].'" '.$selected.'>'.$dropdownArrayValue['name'].'</option>';
+                    } else {
+                        $selected = ( $fieldValue == $dropdownArrayValue['name'] ) ? 'selected="selected"' : ""; 
+                        $dropdownHTML .= '<option value="'.$dropdownArrayValue['name'].'" '.$selected.'>'.$dropdownArrayValue['name'].'</option>';
+                    }
                 }
             $dropdownHTML .= '</select>';
         }
@@ -429,31 +434,42 @@ class Helper{
                 ->where('deals.media_id', '=', $mediasId)
                 ->where('deals.client_id', '=', $clientsId)
                 ->get(['deals.id as id','deal_payloads.name as name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
             break;
             case "demographic_name":
                 $dealView = Demographic::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
             break;
             case "brand_name":
                 $dealView = Brands::where('client_id', '=', $clientsId)->where('advertiser_id', '=', $advertiserId)->where('status', '=', 1)->get(['id','product_name as name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
             break;
             case "outlet_name":
                 $dealView = Outlets::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','outlet_type as name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
             break;
             case "agency_name":
                 $dealView = Agencys::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
             break;
             case "daypart_name":
                 $dealView = DayParts::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
             break;
             case "location_name":
                 $dealView = Locations::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
+            break;
+            case "campaign_payload_name":
+                if(is_numeric($selectOptionName)){
+                $dealView = Campaigns::join('campaign_payloads', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
+                    ->where('campaigns.advertiser_id', '=', $advertiserId)
+                    ->where('campaigns.client_id','=',$clientsId)
+                    ->where('campaigns.media_id', '=', $mediasId)
+                    ->get(['campaign_payloads.name as name','campaigns.id as id','campaign_payloads.id as cam_pay_id'])
+                    ->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,1);
+                }
             break;
         }
         return $tableData;
@@ -524,6 +540,9 @@ class Helper{
             }
         }
         return $tableFields;
+    }
+    public static function changeDateFormateYMD($fieldArray){
+        return  date('Y-m-d', strtotime($fieldArray));
     }
 
     public static function addfieldsValue($fieldArray){

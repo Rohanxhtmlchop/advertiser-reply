@@ -174,7 +174,7 @@ class CampaignController extends Controller
         
             $campaignDayTableData = Helper::campaignDayTime( $campaignList, 'campaign_payloads' );
             $campaignTableData = Helper::tableAddDaysAndTime( $campaignListArray, $campaignDayTableData, 0 ); 
-            $cahngeDateFormateFlightStart = Helper::changeDateFormate( $campaignTableData, array( 'flight_start_date', 'flight_end_date', 'valid_from', 'valid_to' ), 0);
+            $cahngeDateFormateFlightStart = Helper::changeDateFormate( $campaignTableData, array( 'flight_start_date', 'flight_end_date', 'valid_from', 'valid_to','created_at','updated_at' ), 0);
             //$finalCampaignData = Helper::changeDateFormate( $cahngeDateFormateFlightStart, array( 'flight_end_date' ), 0);
 
             $response = array(
@@ -232,6 +232,7 @@ class CampaignController extends Controller
     public function postEditCampaign( Request $request ){
         $advertiserId = Session::get('advertiser_id');
         $userId = Session::get('user_id');
+        print_r($request->data);
         if( $request->data != null ){
             $newCampaignArray = [];
             $newDayArray = [];
@@ -246,16 +247,16 @@ class CampaignController extends Controller
             if( count( $newCampaignArray ) > 0 ){
                 $campaignFlightStartDate = '';
                 if( $newCampaignArray['flight_start_date'] != ''){
-                    $campaignFlightStartDate = date('Y-m-d', strtotime($newCampaignArray['flight_start_date']));
+                    $campaignFlightStartDate = Helper::changeDateFormateYMD($newCampaignArray['flight_start_date']); 
                 }else{
-                    $campaignFlightStartDate = date('Y-m-d', strtotime($newCampaignArray['campaign_flight_start_date']));
+                    $campaignFlightStartDate = Helper::changeDateFormateYMD($newCampaignArray['campaign_flight_start_date']); 
                 }
 
                 $campaignFlightEndDate = '';
                 if( $newCampaignArray['flight_end_date'] != ''){
-                    $campaignFlightEndDate = date('Y-m-d', strtotime($newCampaignArray['flight_end_date']));
+                    $campaignFlightEndDate = Helper::changeDateFormateYMD($newCampaignArray['flight_end_date']);
                 }else{
-                    $campaignFlightEndDate = date('Y-m-d', strtotime($newCampaignArray['campaign_flight_end_date']));
+                    $campaignFlightEndDate = Helper::changeDateFormateYMD($newCampaignArray['campaign_flight_end_date']);
                 }
 
                 $dayOfArray = Helper::daySmallArray();
@@ -312,7 +313,7 @@ class CampaignController extends Controller
                 $jsonCampaignList = array_diff_key($jsonCampaignArray, array_flip($removeFields));
 
                 $currentDate = date('Y-m-d H:i:s');
-                
+                $dateChange = ( $newCampaignArray['date_change'] != '' )? Helper::changeDateFormateYMD($newCampaignArray['date_change']) : '';
                 $updateCampaign = Campaigns::join('campaign_payloads', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
                     ->join('demographics', 'campaigns.demographic_id', '=', 'demographics.id')->where('demographics.status','=', 1)
                     ->where('campaigns.advertiser_id', '=', $advertiserId)
@@ -346,6 +347,8 @@ class CampaignController extends Controller
                         'campaign_payloads.cpm' => $newCampaignArray['cpm_ipm_cpm'],
                         'campaign_payloads.inventory_length' => $newCampaignArray['ad_length'],
                         'campaigns.status' => 8,
+                        'campaign_payloads.date_change' => $dateChange,
+                        'campaign_payloads.change_by' => $advertiserId,
                         'demographics.updated_by' => $userId,
                         'demographics.updated_at' => $currentDate,
                         'campaigns.updated_by' => $userId,
