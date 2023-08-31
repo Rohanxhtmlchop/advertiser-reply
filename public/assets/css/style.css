@@ -23,7 +23,7 @@ a{text-decoration: none;}
 .account-info-main{column-gap: 30px;}
 .account-info .account-info-box{font-size: 14px;color: #ffffff;background: #17a2b8;padding: 5px 10px;border-radius: 5px;}
 .account-log a{font-size: 14px;color: #333333;font-weight: 500;}
-.account-log a:hover{color: #666666;}
+.account-log a:hover{color: #a5c32a;}
 .account-log a i{margin-right: 10px;}
 .page-wrapper.login{position: relative;padding: 30px 0;}
 .login-content{position: relative;}
@@ -47,7 +47,7 @@ a{text-decoration: none;}
 .account-dropdown .info .image i{font-size: 65px;}
 .account-dropdown__item p{color: #333;padding: 5px 25px;font-size: 14px;}
 .client-info-box{display: none;}
-.account-item > .content > a:hover, .bars-icon:hover {color: #666666;}
+.account-item > .content > a:hover, .bars-icon:hover {color: #a5c32a;}
 .bars-icon{color: #333333;}
 .bg-blue{background: #17a2b8!important;}
 .bg-green{background: #28a745!important;}
@@ -168,12 +168,30 @@ input[type=number] { -moz-appearance: textfield; }
 .step-form-sec{display: flex;align-items: center;}
 .signup-step-container{padding: 30px 0px !important;}
 .step-form-sec .section__content{width: 100%;}
-.json-mapping-view-secÂ #db_fields_mapping td.error-message i{color:green;}
+.json-mapping-view-secÃ‚ #db_fields_mapping td.error-message i{color:green;}
 .json-mapping-view-sec #db_fields_mapping .error-message i.fa-times-circle{color:red;}
 .json-mapping-view-sec { table-layout: fixed; }
 select.form-control{-webkit-appearance: auto;-moz-appearance: auto;appearance: auto;}
 .email-otp-number input{text-align: center;}
 .media-sec select{-webkit-appearance: none;}
+.table-responsive::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+.table-responsive::-webkit-scrollbar
+{
+	height: 5px;
+	background-color: #F5F5F5;
+}
+.table-responsive::-webkit-scrollbar-thumb
+{
+	background-color: #a5c32a;
+	border: 2px solid #a5c32a;
+}
+.main-content .section__content--p10{padding: 0px !important;}
+div.dataTables_wrapper div.dataTables_info{padding-top: 8px;}
 @media (min-width: 1400px){
     .advertiser-view .head h2{width: calc(100% - 340px);padding-right: 5px;}
 }
@@ -224,10 +242,12 @@ select.form-control{-webkit-appearance: auto;-moz-appearance: auto;appearance: a
    .campaign-number-time-sec{max-width:100%;width: 100%;}
    .campaign-edit .deal-view-box{padding-top: 0px;}
    .campaign-number-time-sec .campaign-number, .campaign-number-time-sec .campaign-date{text-align: center !important;}
+   .pagination a{font-size: 12px;padding: 6px 10px;}
+   div.dataTables_wrapper div.dataTables_info{font-size: 14px;}
 }
 @media (max-width: 1090px){
   .create-campaign-btn .flight-range{right: 20px !important;}
-   .create-campaign-btn{min-height: 48px !important;}
+  .create-campaign-btn{min-height: 48px !important;}
 }
 @media (max-width: 991px){
     .main-content{padding-bottom: 0px;}
@@ -283,6 +303,9 @@ select.form-control{-webkit-appearance: auto;-moz-appearance: auto;appearance: a
   .dataTables_filter{text-align: right !important;}
   .dataTables_filter input{max-width: 170px;}
   .dataTables_wrapper .col-sm-12{ width: 50% !important;}
+  .dataTables_wrapper .dt-row .col-sm-12{ width: 100% !important;}
+  div.table-responsive>div.dataTables_wrapper>div.row{margin-right: calc(-.5 * var(--bs-gutter-x));margin-left: calc(-.5 * var(--bs-gutter-x));}
+  div.table-responsive>div.dataTables_wrapper>div.row>div[class^=col-]:first-child{padding-left: calc(var(--bs-gutter-x) * .5);}
   .wizard label{margin-bottom: 10px;}
   .wizard{padding: 60px 15px 30px 15px;}
   .wizard ul.list-inline, .wizard ul.list-inline li, .wizard ul.list-inline li .btn{width: 100%;}
@@ -295,6 +318,8 @@ select.form-control{-webkit-appearance: auto;-moz-appearance: auto;appearance: a
   .email-otp-sec{text-align: center;}
   .email-otp-number{justify-content: center;}
   .email-otp-number input{max-width: 40px;}
+  .list-inline li{text-align: center;}
+  
 }
 @media (max-width: 575px) {
     .deal-view-sec .deal-view .col, .campaign-view-sec .deal-view .col{width: 100%;flex: 0 0 auto;}
@@ -308,10 +333,11 @@ select.form-control{-webkit-appearance: auto;-moz-appearance: auto;appearance: a
   .flight-range.select .daterange{justify-content: center;}
   .dataTables_length, .dataTables_filter{text-align: center !important;}
   .dataTables_wrapper .col-sm-12{ width: 100% !important;}
+  #fieldmapping .custom-table{min-width: 575px;}
 }
 @media (max-width: 479px) {
     .form-group-inline label, .form-group-inline span.label, .form-group-inline input, .form-group-inline select, .form-group-inline .number-field, .form-group-inline span{width: 100%;}
     .form-group-inline{display: block;}
-    .form-group-inline label, .form-group-inline span.label{margin-bottom: 10px;}
+    .form-group-inline label, .form-group-inline span.label{margin-bottom: 10px;text-align: left;}
    
 }
