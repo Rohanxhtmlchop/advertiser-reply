@@ -19,39 +19,39 @@
                             <form id="login_form" method="post">   
                                 @csrf
                                 <div class="user-sec">
-                                    <div class="row">
-                                        <div class="col-md-4 form-group">
+                                    <div class="row form-group align-items-center">
+                                        <div class="col-md-4">
                                             <label for="user_name">User Name</label>
                                         </div>
-                                        <div class="col-md-8 form-group">
+                                        <div class="col-md-8">
                                             <input type="text" id="user_name" class="au-input au-input--full form-control" name="user_name" value="{{ old('user_name') }}"  autofocus>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="password-sec">
-                                    <div class="row">
-                                        <div class="col-md-4 form-group">
+                                    <div class="row form-group align-items-center">
+                                        <div class="col-md-4">
                                             <label for="password">Password</label>
                                         </div>
-                                        <div class="col-md-8 form-group">
+                                        <div class="col-md-8">
                                             <input type="password" id="password" class="au-input au-input--full form-control" name="password" value="{{ old('password') }}" >
                                         </div>
                                     </div>
                                 </div>
                                 <div class="media-sec">
-                                    <div class="row">
-                                        <div class="col-md-4 form-group">
+                                    <div class="row form-group align-items-center">
+                                        <div class="col-md-4">
                                             <label for="password">Media Line</label>
                                         </div>
-                                        <div class="col-md-8 form-group">
+                                        <div class="col-md-8">
                                             <select name="media" id="media" class="au-input au-input--full form-control">
-                                                    <option value="">Select Option</option>
-                                                    @if( $data['mediaList'] )
-                                                        @foreach( $data['mediaList'] as $mediaKey => $mediaValue)
-                                                        <option value="{{ $mediaValue['id'] }}" 
-                                                            @if ( $mediaValue['id'] == old('media') ) selected="selected" @endif>{{ $mediaValue['name'] }}</option>
-                                                        @endforeach;
-                                                    @endif;
+                                                <option value="">Select Option</option>
+                                                @if( $data['mediaList'] )
+                                                    @foreach( $data['mediaList'] as $mediaKey => $mediaValue)
+                                                    <option value="{{ $mediaValue['id'] }}" 
+                                                        @if ( $mediaValue['id'] == old('media') ) selected="selected" @endif>{{ $mediaValue['name'] }}</option>
+                                                    @endforeach;
+                                                @endif;
                                             </select>
                                         </div>
                                     </div>
@@ -104,5 +104,6 @@
                 </div>
             </div>
         </div>
+    </div>
     @include('includes.script')
     @stop

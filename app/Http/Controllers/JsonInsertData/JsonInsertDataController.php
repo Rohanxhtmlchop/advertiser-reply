@@ -259,38 +259,39 @@ class JsonInsertDataController extends Controller
                     $data = array( 'status' => 0 , 'message' => 'Data Was Not Inserted.');
                 }
             } else {
+                $dealTableFieldArray = Helper::jsonDataGetSpecificTableList($tableName);
+                $dealPayloadFieldArray['updated_by'] = $userId;
+                $dealPayloadFieldArray['change_by'] = $userId;
+                $dealPayloadFieldArray['date_change'] = date('Y-m-d');
+                $dealPayloadFieldName = $dealPayloadFieldArray['name'];
+                unset($dealPayloadFieldArray['name']);
+                unset($dealPayloadFieldArray['created_at']);
+                unset($dealPayloadFieldArray['created_by']);
+                $dealInsertArray = [];
+                foreach( $dealTableFieldArray as $dealTableFieldVal){
+                    if( str_contains($dealTableFieldVal, '_id')){
+                        $newName = str_replace("_id","_name",$dealTableFieldVal);
+                        $dealInsertArray[$dealTableFieldVal] = $tableFields[$newName];
+                    } else{ 
+                        $fieldValue = ( array_key_exists($dealTableFieldVal,$tableFields) ) ? $tableFields[$dealTableFieldVal] : null;
+                        $dealInsertArray[$dealTableFieldVal] = $fieldValue;
+                    }
+                }
+                $dealFieldArray = Helper::addfieldsValue($dealInsertArray);
+                $dealFieldArray['advertiser_id'] = $advertiserId;
+                $dealFieldArray['client_id'] = $clientId;
+                $inserData = Helper::insertData($dealFieldArray);
+
                 if( $tableName == 'campaign'){
                     $campaignIdArray = Campaigns::join('campaign_payloads', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
                     ->where('campaigns.advertiser_id', '=', $advertiserId)
                     ->where('campaigns.client_id','=',$clientId)
                     ->where('campaigns.media_id', '=', $mediasId)
-                    ->where('campaigns.id', '=', $dealPayloadFieldArray['name'])
+                    ->where('campaigns.id', '=', $dealPayloadFieldName)
                     ->first(['campaign_payloads.id as cam_pay_id'])
                     ->toArray();
 
-                    $dealTableFieldArray = Helper::jsonDataGetSpecificTableList($tableName);
-                    $dealPayloadFieldArray['updated_by'] = $userId;
-                    $dealPayloadFieldArray['change_by'] = $userId;
-                    $dealPayloadFieldArray['date_change'] = date('Y-m-d');
-                    unset($dealPayloadFieldArray['name']);
-                    unset($dealPayloadFieldArray['created_at']);
-                    unset($dealPayloadFieldArray['created_by']);
                     $updateCampaignPayload = CampaignPayload::where('id','=',$campaignIdArray['cam_pay_id'])->update($dealPayloadFieldArray);
-                    
-                    $dealInsertArray = [];
-                    foreach( $dealTableFieldArray as $dealTableFieldVal){
-                        if( str_contains($dealTableFieldVal, '_id')){
-                            $newName = str_replace("_id","_name",$dealTableFieldVal);
-                            $dealInsertArray[$dealTableFieldVal] = $tableFields[$newName];
-                        } else{ 
-                            $fieldValue = ( array_key_exists($dealTableFieldVal,$tableFields) ) ? $tableFields[$dealTableFieldVal] : null;
-                            $dealInsertArray[$dealTableFieldVal] = $fieldValue;
-                        }
-                    }
-                    $dealFieldArray = Helper::addfieldsValue($dealInsertArray);
-                    $dealFieldArray['advertiser_id'] = $advertiserId;
-                    $dealFieldArray['client_id'] = $clientId;
-                    $inserData = Helper::insertData($dealFieldArray);
                     $updateCampaignId = $inserData['campaign_payload_id'];
                     $inserData['updated_by'] = $userId;
                     unset($inserData['campaign_payload_id']);
@@ -298,6 +299,32 @@ class JsonInsertDataController extends Controller
                     unset($inserData['created_by']);
                     if( $updateCampaignPayload == 1 ){
                         $updateCampaign = Campaigns::where('id','=',$updateCampaignId)
+                        ->where('advertiser_id','=',$advertiserId)
+                        ->where('client_id','=',$clientId)
+                        ->where('media_id','=',$mediasId)
+                        ->update($inserData);
+                        if( $updateCampaign == 1 ){
+                            $data = array( 'status' => 1 , 'message' => 'Data Successfully Updated.');
+                        }
+                    }   
+                }
+
+                if( $tableName == 'deal'){
+                    $campaignIdArray = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
+                    ->where('deals.advertiser_id', '=', $advertiserId)
+                    ->where('deals.client_id','=',$clientId)
+                    ->where('deals.media_id', '=', $mediasId)
+                    ->where('deals.id', '=', $dealPayloadFieldName)
+                    ->first(['deal_payloads.id as cam_pay_id'])
+                    ->toArray();
+                    $updateCampaignPayload = DealPayload::where('id','=',$campaignIdArray['cam_pay_id'])->update($dealPayloadFieldArray);
+                    $updateDealId = $inserData['deal_payload_id'];
+                    $inserData['updated_by'] = $userId;
+                    unset($inserData['deal_payload_id']);
+                    unset($inserData['created_at']);
+                    unset($inserData['created_by']);
+                    if( $updateCampaignPayload == 1 ){
+                        $updateCampaign = Deals::where('id','=',$updateDealId)
                         ->where('advertiser_id','=',$advertiserId)
                         ->where('client_id','=',$clientId)
                         ->where('media_id','=',$mediasId)

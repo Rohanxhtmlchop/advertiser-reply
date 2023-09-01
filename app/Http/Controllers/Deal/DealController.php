@@ -29,6 +29,9 @@ class DealController extends Controller
             ->where('deals.advertiser_id', '=', $advertiserId)
             ->where('deals.client_id','=', $clientId)
             ->where('deals.media_id','=', $mediasId)
+            ->where('campaigns.advertiser_id', '=', $advertiserId)
+            ->where('campaigns.client_id','=', $clientId)
+            ->where('campaigns.media_id','=', $mediasId)
             ->join('day_parts', 'deals.daypart_id', '=', 'day_parts.id')->where('day_parts.status','=', 1)
             ->join('brands', 'deals.brand_id', '=', 'brands.id')->where('brands.status','=', 1)
             ->orderBy('deals.id', 'asc');
