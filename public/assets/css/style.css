@@ -16,6 +16,7 @@ a{text-decoration: none;}
 .navbar-sidebar .navbar__list li a{padding: 1rem;color: #ffffff;border-radius: 0.25rem;margin-bottom: 0.2rem;}
 .navbar-sidebar .navbar__list li a:hover, .navbar-sidebar .navbar__list li.active a{background-color: rgba(255,255,255,.1);color: #fff;}
 .header-wrap{width: 100%; display: block !important;}
+.header-mobile .navbar-mobile .navbar-mobile__list li a:hover{color: #a5c32a;}
 .client-info{width: calc(100% - 610px);}
 .account-info-main, .bar-icon-box{width: 305px;}
 .header-wrap-box{column-gap: 15px;}
@@ -192,6 +193,7 @@ select.form-control{-webkit-appearance: auto;-moz-appearance: auto;appearance: a
 }
 .main-content .section__content--p10{padding: 0px !important;}
 div.dataTables_wrapper div.dataTables_info{padding-top: 8px;}
+.au-input{padding: .375rem .75rem;}
 @media (min-width: 1400px){
     .advertiser-view .head h2{width: calc(100% - 340px);padding-right: 5px;}
 }
@@ -239,7 +241,7 @@ div.dataTables_wrapper div.dataTables_info{padding-top: 8px;}
    .client-info-box{padding: 25px;}
    .deal-view-sec .deal-view .col, .campaign-view-sec .deal-view .col {width: 25%;flex: 0 0 auto;}
    .card .head{min-height:auto;}
-   .campaign-number-time-sec{max-width:100%;width: 100%;}
+   .campaign-number-time-sec{max-width:100%;width: 100%;position: relative;}
    .campaign-edit .deal-view-box{padding-top: 0px;}
    .campaign-number-time-sec .campaign-number, .campaign-number-time-sec .campaign-date{text-align: center !important;}
    .pagination a{font-size: 12px;padding: 6px 10px;}
