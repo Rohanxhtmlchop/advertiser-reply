@@ -311,7 +311,7 @@ class Helper{
                     $newDataArray['updated_by'] = Helper::getUserName($newDataArray['updated_by']);
                 }
                 if($newDataArray['created_by'] != ''){
-                    $newDataArray['created_by'] = Helper::getUserName($newDataArray['updated_by']);
+                    $newDataArray['created_by'] = Helper::getUserName($newDataArray['created_by']);
                 }
             }
         }
