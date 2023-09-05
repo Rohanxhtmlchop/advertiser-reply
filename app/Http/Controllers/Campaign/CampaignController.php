@@ -111,19 +111,16 @@ class CampaignController extends Controller
                 $campaignViewTableHtml .= '<tr class="tr-shadow">';
                     foreach( $tableDetailRowVal as $tableRowDetailKey => $tableRowDetail ){
                         if( $tableRowDetailKey == 'deal_auto_id' ) {
-                            if( $tableDetailRowVal['show_data'] != 1 ){
+                            if( ( $tableDetailRowVal['status'] == 'Under Approval' ) || ( $tableDetailRowVal['status'] == 'InflIght' ) ){
+                                $campaignViewTableHtml .='<td></td>';
+                            } else{
                                 $encryptId = base64_encode($tableDetailRowVal['campaign_id']);
                                 $path = '/campaign/edit/'.$encryptId;
                                 $campaignURL = url($path); 
-                                
-                                $campaignViewTableHtml .='<td>
-                                    <a href="'.$campaignURL.'"><i class="fa fa-pencil-alt fa-lg"></i></a>
-                            </td>';
-                            } else{
-                                $campaignViewTableHtml .='<td></td>';
+                                $campaignViewTableHtml .='<td><a href="'.$campaignURL.'"><i class="fa fa-pencil-alt fa-lg"></i></a></td>';
                             }
                         } else if( $tableRowDetailKey != 'show_data'){
-                            $campaignViewTableHtml .='<td class="1 '. $tableRowDetailKey .'">'. $tableRowDetail .'</td>';
+                            $campaignViewTableHtml .='<td class="'. $tableRowDetailKey .'">'. $tableRowDetail .'</td>';
                         }
                     }    
                     $campaignViewTableHtml .='</tr>';
@@ -145,6 +142,7 @@ class CampaignController extends Controller
                 ->join('medias', 'campaigns.media_id', '=', 'medias.id')->where('medias.status','=', 1)
                 ->join('agencys', 'campaigns.agency_id', '=', 'agencys.id')->where('agencys.status','=', 1)
                 ->join('outlets', 'campaigns.outlet_id', '=', 'outlets.id')->where('outlets.status','=', 1)
+                ->join('users', 'campaigns.updated_by', '=', 'users.id')
                 ->join('demographics', 'campaigns.demographic_id', '=', 'demographics.id')->where('demographics.status','=', 1)
                 ->join('day_parts', 'campaigns.daypart_id', '=', 'day_parts.id')->where('day_parts.status','=', 1)
                 ->join('deals', 'campaigns.deal_id', '=', 'deals.id')
@@ -170,13 +168,13 @@ class CampaignController extends Controller
                 'demographics.grp as demographics_grp',
                 'demographics.cpm as demographics_cpm',
                 'demographics.impression as demographics_impression',
+                'users.user_name as users_name',
             ])->toArray();
         
             $campaignDayTableData = Helper::campaignDayTime( $campaignList, 'campaign_payloads' );
             $campaignTableData = Helper::tableAddDaysAndTime( $campaignListArray, $campaignDayTableData, 0 ); 
             $cahngeDateFormateFlightStart = Helper::changeDateFormate( $campaignTableData, array( 'flight_start_date', 'flight_end_date', 'valid_from', 'valid_to','created_at','updated_at' ), 0);
             //$finalCampaignData = Helper::changeDateFormate( $cahngeDateFormateFlightStart, array( 'flight_end_date' ), 0);
-
             $response = array(
                 'status' => 1,
                 'message' => 'Data',
@@ -232,7 +230,6 @@ class CampaignController extends Controller
     public function postEditCampaign( Request $request ){
         $advertiserId = Session::get('advertiser_id');
         $userId = Session::get('user_id');
-        print_r($request->data);
         if( $request->data != null ){
             $newCampaignArray = [];
             $newDayArray = [];

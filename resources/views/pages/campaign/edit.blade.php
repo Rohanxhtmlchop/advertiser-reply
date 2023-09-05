@@ -13,7 +13,7 @@
                                     <h4>Editing Campaign : {{ $campaign['campaign_payloads_id'] }} {{ $campaign['campaign_payloads_name'] }}</h4>
                                 </div>
                                 <div class="campaign-date text-center">
-                                    <span>Add Deal Number between Deal {{ $campaign['campaigns_deal_id'] }} Valid From date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_from'])) }} to Till date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_to'])) }}  Deal Year {{ $campaign['campaigns_year'] }}</span>
+                                    <span>Deal {{ $campaign['campaigns_deal_id'] }} Valid From date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_from'])) }} to Till date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_to'])) }}  Deal Year {{ $campaign['campaigns_year'] }}</span>
                                 </div>
                             </div>
                             <form method="post" id="edit_campaign">

@@ -20,8 +20,9 @@ class DealController extends Controller
         $advertiserId = Session::get('advertiser_id');
         $clientId = Session::get('clients_id');
         $mediasId = Session::get('medias_id');
+
         $dealList = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
-            ->join('campaigns', 'campaigns.deal_id', '=', 'deals.id')->where( 'campaigns.delete','=',0)
+            ->leftJoin('campaigns', 'campaigns.deal_id', '=', 'deals.id')
             ->join('status', 'deals.status', '=', 'status.id')
             ->when($status, function ($query) use ($status) {
                 return $query->where('deals.status','=', $status);
@@ -29,9 +30,6 @@ class DealController extends Controller
             ->where('deals.advertiser_id', '=', $advertiserId)
             ->where('deals.client_id','=', $clientId)
             ->where('deals.media_id','=', $mediasId)
-            ->where('campaigns.advertiser_id', '=', $advertiserId)
-            ->where('campaigns.client_id','=', $clientId)
-            ->where('campaigns.media_id','=', $mediasId)
             ->join('day_parts', 'deals.daypart_id', '=', 'day_parts.id')->where('day_parts.status','=', 1)
             ->join('brands', 'deals.brand_id', '=', 'brands.id')->where('brands.status','=', 1)
             ->orderBy('deals.id', 'asc');
@@ -59,7 +57,7 @@ class DealController extends Controller
             'deal_payloads.a25_49_univ as a25_49_univ',
             'status.name as status',
             ])->toArray();
-        
+
         $dealDayTableData =  $dealList->get([
             'deal_payloads.sunday as sunday', 
             'deal_payloads.monday as monday', 
@@ -124,7 +122,11 @@ class DealController extends Controller
                     if(  $tableRowDetailKey == 'day_time' ){
                         $dealViewTableHtml .='<td class="'.  $tableRowDetailKey .'">'. $dealViewTable['dayTableData'][$key] . $tableRowDetail .'</td>';
                     } else if(  $tableRowDetailKey == 'campaign_number' ){
-                        $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'"><a href="'. URL::to('/campaign/edit/'.base64_encode($tableRowDetail)) .'">'. $tableRowDetail .'</a></td>';
+                        if( $tableRowDetail != ''){
+                            $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'"><a href="'. URL::to('/campaign/edit/'.base64_encode($tableRowDetail)) .'">'. $tableRowDetail .'</a></td>';
+                        } else {
+                            $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'">-</td>';
+                        }
                     } else {
                         $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'">'. $tableRowDetail .'</td>';
                     }

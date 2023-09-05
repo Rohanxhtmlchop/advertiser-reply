@@ -281,7 +281,6 @@ class JsonInsertDataController extends Controller
                 $dealFieldArray['advertiser_id'] = $advertiserId;
                 $dealFieldArray['client_id'] = $clientId;
                 $inserData = Helper::insertData($dealFieldArray);
-
                 if( $tableName == 'campaign'){
                     $campaignIdArray = Campaigns::join('campaign_payloads', 'campaigns.campaign_payload_id', '=', 'campaign_payloads.id')
                     ->where('campaigns.advertiser_id', '=', $advertiserId)
@@ -334,7 +333,7 @@ class JsonInsertDataController extends Controller
                         }
                     }   
                 }
-            }          
+            }         
         } else { 
             $data = array( 'status' => 1 , 'message' => 'Data Successfully Updated.');
         }

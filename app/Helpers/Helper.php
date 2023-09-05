@@ -20,6 +20,8 @@ use App\Models\Demographic;
 use App\Models\Locations;
 use App\Models\Medias;
 use App\Models\Outlets;
+use App\Models\Status;
+use App\Models\User;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -305,9 +307,21 @@ class Helper{
                     }
                 }
                 $newDataArray = $dataArray;
+                if($newDataArray['updated_by'] != ''){
+                    $newDataArray['updated_by'] = Helper::getUserName($newDataArray['updated_by']);
+                }
+                if($newDataArray['created_by'] != ''){
+                    $newDataArray['created_by'] = Helper::getUserName($newDataArray['updated_by']);
+                }
             }
         }
+        
         return $newDataArray;
+    }
+
+    public static function getUserName($userId){
+        $replaceValue = User::where('id', '=' , $userId)->first(['display_name'])->toArray();
+        return $replaceValue['display_name'];
     }
 
     public static function removeUnderscore($value){
@@ -373,8 +387,6 @@ class Helper{
                         case "updated_at":
                             break;
                         case "delete":
-                            break;
-                        case "status":
                             break;
                         default:
                         $newData[$columnName] = $columnType;
@@ -458,6 +470,10 @@ class Helper{
             break;
             case "location_name":
                 $dealView = Locations::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
+            break;
+            case "status":
+                $dealView = Statu::get(['id','name'])->toArray();
                 $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
             break;
             case "campaign_payload_name":
@@ -567,9 +583,6 @@ class Helper{
                 case "created_at":
                     $newFieldArray['created_at'] = $currentDate;
                 break;
-                case "status":
-                    $newFieldArray['status'] = 3;
-                break;
                 case "valid_from":
                     $newFieldArray['valid_from'] =  date('Y-m-d h:m:s', strtotime($fieldArray['valid_from']));
                 break;
@@ -596,13 +609,15 @@ class Helper{
         }
     }
     public static function getTableIdOrInsertedId($tableOfArray, $tableName){
-        if( count( $tableOfArray ) > 0 ){
+        if( count( $tableOfArray ) > 0 ){ 
             if( $tableName == 'brands' ){
                 $getMediaData = DB::table($tableName)->where('client_id',$tableOfArray['client_id'])->where('product_name',$tableOfArray['product_name'])->first(['id']);
             } else if( $tableName == 'outlets' ){
                 $getMediaData = DB::table($tableName)->where('client_id',$tableOfArray['client_id'])->where('outlet_type',$tableOfArray['outlet_type'])->first(['id']);
             } else if( $tableName == 'deals' ){
                 $getMediaData = DB::table($tableName)->join('deal_payloads', 'deal_payloads.id', '=', 'deals.deal_payload_id')->where('deal_payloads.name',$tableOfArray['name'])->where('deals.client_id',$tableOfArray['client_id'])->where('deals.advertiser_id',$tableOfArray['advertiser_id'])->first(['deals.id']);
+            } else if( $tableName == 'status' ){
+                $getMediaData = DB::table('status')->where('name',$tableOfArray['name'])->first(['id']);
             } else {
                 $getMediaData = DB::table($tableName)->where('client_id',$tableOfArray['client_id'])->where('name',$tableOfArray['name'])->first(['id']);
             }
@@ -650,6 +665,9 @@ class Helper{
                     break;
                     case "daypart_id":
                         $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableFields,'day_parts');
+                    break;
+                    case "status":
+                        $fieldArray[$fieldArrayKey] = Helper::getTableIdOrInsertedId($tableFields,'status');
                     break;
                     default:
                         $fieldArray[$fieldArrayKey] = $fieldArrayVal;
