@@ -379,28 +379,30 @@ $(document).ready(function(){
            $(form).find(':input:disabled').each(function(){
                 $(this).prop('disabled',false)
            });
-           //console.log( $(form).find(':input:disabled').attr('name') )
             var getFormAllData = $(form).serializeArray();
-            console.log( getFormAllData )
             var url = URL+'/campaign/post-campaign-edit';
             $.ajax({
                 url: url,
                 type: 'POST',
                 data: {_token: CSRF_TOKEN, data: getFormAllData},
                 success: function(response){
-                    sucessNotification('Sucessfully Data Update.');
-                    $(form).find(':input:disabled').each(function(){
-                         $(this).prop('disabled',true)
-                    });
-                    const data = response;
-                    const link = document.createElement('a');
-                    link.setAttribute('href', URL+'/storage/app/public/campaign/'+fileName+'.json');
-                    link.setAttribute('download', fileName+'.json'); // Need to modify filename ...
-                    link.click();
-                    setTimeout(function(){
-                        window.location.href = URL+'';
-                    },3000)
-                    return true;
+                    if( response.status == 0 ){
+                        errorNotification(response.message);
+                    } else {
+                        sucessNotification(response.message);
+                        $(form).find(':input:disabled').each(function(){
+                            $(this).prop('disabled',true)
+                        });
+                        const data = response;
+                        const link = document.createElement('a');
+                        link.setAttribute('href', URL+'/storage/app/public/campaign/'+fileName+'.json');
+                        link.setAttribute('download', fileName+'.json'); // Need to modify filename ...
+                        link.click();
+                        setTimeout(function(){
+                            window.location.href = URL+'';
+                        },3000)
+                        return true;
+                    }
                 }
             });
         }
