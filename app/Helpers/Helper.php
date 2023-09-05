@@ -320,8 +320,12 @@ class Helper{
     }
 
     public static function getUserName($userId){
-        $replaceValue = User::where('id', '=' , $userId)->first(['display_name'])->toArray();
-        return $replaceValue['display_name'];
+        if( $userId != 0 ){
+            $replaceValue = User::where('id', '=' , $userId)->first(['display_name'])->toArray();
+            return $replaceValue['display_name'];
+        } else {
+            return '';
+        }
     }
 
     public static function removeUnderscore($value){
