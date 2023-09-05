@@ -361,9 +361,8 @@ class CampaignController extends Controller
                 if( $updateCampaign == 0 ){
                     $data = array( 'status' => 0 , 'message' => 'Record was not Updated.');
                 }else{
-                    $data = array( 'status' => 1 , 'message' => 'Success');
+                    $data = array( 'status' => 1 , 'message' => 'Campaign '.$newCampaignArray['campaign_id'].' Was Successfully Updated.');
                 }
-                
                 return response()->json($data);  
             }
         }
