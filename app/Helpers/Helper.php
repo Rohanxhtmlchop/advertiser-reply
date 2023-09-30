@@ -428,7 +428,7 @@ class Helper{
                 foreach( $dropdownArray as $dropdownArrayKey => $dropdownArrayValue ){
                     if( $flag == 1 ){
                         $selected = ( $fieldValue == $dropdownArrayValue['id'] ) ? 'selected="selected"' : ""; 
-                        $dropdownHTML .= '<option value="'.$dropdownArrayValue['id'].'" '.$selected.'>'.$dropdownArrayValue['name'].'</option>';
+                        $dropdownHTML .= '<option value="'.$dropdownArrayValue['id'].'" '.$selected.'>'.$dropdownArrayValue['name'].' ('.$dropdownArrayValue['id'].')</option>';
                     } else {
                         $selected = ( $fieldValue == $dropdownArrayValue['name'] ) ? 'selected="selected"' : ""; 
                         $dropdownHTML .= '<option value="'.$dropdownArrayValue['name'].'" '.$selected.'>'.$dropdownArrayValue['name'].'</option>';
