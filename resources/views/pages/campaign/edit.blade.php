@@ -138,7 +138,7 @@
                                                             <input type="text" id="change_by"class="au-input au-input--full form-control"name="change_by_old" value="" disabled="">
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
-                                                            <label for="change_by">Created Date</label>
+                                                            <label for="change_by">Change Date</label>
                                                             <input type="text" id="change_date"class="au-input au-input--full form-control"name="change_date_old" value="" disabled="">
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
@@ -167,7 +167,7 @@
                                                                     <label for="realistic">Demographics</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <select name="demographic_name" class="au-input au-input--full form-control" id="demographic_name" >
+                                                                    <select name="demographic_name" class="au-input au-input--full form-control" id="demographic_name" {{ $disabled }} >
                                                                     <option value="">Demographic</option>
                                                                     @if( count( $demographicList ) > 0 )
                                                                         @foreach( $demographicList as $demographicListKey => $demographicListVal )
@@ -184,7 +184,7 @@
                                                                     <label for="demo_population">Demo Population</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="number" name="cpm_ipm_demo_population" class="au-input--full form-control" value="" >
+                                                                    <input type="number" name="cpm_ipm_demo_population" class="au-input--full form-control" value="" {{ $disabled }} >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -194,7 +194,7 @@
                                                                     <label for="demo_population">Impressions</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="number" name="cpm_ipm_impressions" class="au-input--full form-control" value="" >
+                                                                    <input type="number" name="cpm_ipm_impressions" class="au-input--full form-control" value="" {{ $disabled }} >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -204,7 +204,7 @@
                                                                     <label for="demo_population">GRP</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="number" name="cpm_ipm_grp" class="au-input--full form-control" value="" >
+                                                                    <input type="number" name="cpm_ipm_grp" class="au-input--full form-control" value="" {{ $disabled }} >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -214,7 +214,7 @@
                                                                     <label for="demo_population">CPM</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="number" name="cpm_ipm_cpm" class="au-input--full form-control" value="" >
+                                                                    <input type="number" name="cpm_ipm_cpm" class="au-input--full form-control" value="" {{ $disabled }} >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -241,7 +241,7 @@
                                                         <div class="col-md-6">
                                                             <div class="row">
                                                                 <div class="col-md-6 form-group date-field">
-                                                                    <input type="text" placeholder="Flight Start Date" id="flight_start_date" class="au-input au-input--full form-control" name="flight_start_date">
+                                                                    <input type="text" placeholder="Flight Start Date" id="flight_start_date" class="au-input au-input--full form-control" name="flight_start_date" {{ $disabled }} >
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
                                                                     <input type="text" id="campaign_flight_start_date" placeholder="MM/DD/YYYY" class="au-input au-input--full form-control" name="campaign_flight_start_date" value=""disabled="">
@@ -254,7 +254,7 @@
                                                                     <label for="revenue_risk">Ad Length</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="text" id="ad_length" class="au-input au-input--full form-control" name="ad_length" value="">
+                                                                    <input type="text" id="ad_length" class="au-input au-input--full form-control" name="ad_length" value=""  {{ $disabled }}>
                                                                     <input type="hidden" id="ad_length_old" class="au-input au-input--full form-control" name="ad_length_old" value="">
                                                                 </div>
                                                             </div>
@@ -262,7 +262,7 @@
                                                         <div class="col-md-6">
                                                             <div class="row">
                                                                 <div class="col-md-6 form-group date-field">
-                                                                    <input type="text" placeholder="Flight End Date" id="flight_end_date" class="au-input au-input--full form-control" name="flight_end_date" >
+                                                                    <input type="text" placeholder="Flight End Date" id="flight_end_date" class="au-input au-input--full form-control" name="flight_end_date"  {{ $disabled }} >
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
                                                                     <input type="text" id="campaign_flight_end_date" placeholder="MM/DD/YYYY" class="au-input au-input--full form-control" name="campaign_flight_end_date" value=""disabled="">
@@ -272,7 +272,7 @@
                                                         <div class="col-md-6">
                                                             <div class="row">
                                                                 <div class="col-md-6 form-group">
-                                                                    <select name="day_parts_id"class="au-input au-input--full form-control" id="day_parts_id">
+                                                                    <select name="day_parts_id"class="au-input au-input--full form-control" id="day_parts_id"  {{ $disabled }}>
                                                                     <option value="">Time / Day Part</option>
                                                                                 @if( count( $dayPartList ) > 0 )
                                                                                     @foreach( $dayPartList as $dayPartListKey => $dayPartListVal )
@@ -305,27 +305,27 @@
                                                             <tbody>
                                                                 <tr class="day-checkbox-list">
                                                                     <td>Days</td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="S" id="sunday" value="sunday"  /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="M" id="monday" value="monday"  /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="T" id="tuesday" value="tuesday"  /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="W" id="wednesday" value="wednesday"  /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="T" id="thursday" value="thursday"  /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="F" id="friday" value="friday"  /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="S" id="saturday" value="saturday"  /></div></td>
+                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="S" id="sunday" value="sunday" {{ $disabled }} /></div></td>
+                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="M" id="monday" value="monday" {{ $disabled }}  /></div></td>
+                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="T" id="tuesday" value="tuesday" {{ $disabled }}  /></div></td>
+                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="W" id="wednesday" value="wednesday" {{ $disabled }} /></div></td>
+                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="T" id="thursday" value="thursday" {{ $disabled }} /></div></td>
+                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="F" id="friday" value="friday" {{ $disabled }} /></div></td>
+                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="S" id="saturday" value="saturday" {{ $disabled }} /></div></td>
                                                                 </tr>
                                                                 <tr class="day-split-checkbox-list">
                                                                     <td>Split</td>
                                                                     <td>
                                                                         <div class="number-field">    
-                                                                            <input type="number" class="au-input form-control" name="sunday_split" id="sunday_split" value="" max="100" />
+                                                                            <input type="number" class="au-input form-control" name="sunday_split" id="sunday_split" value="" max="100" {{ $disabled }} />
                                                                         </div>
                                                                     </td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="monday_split" id="monday_split" value="" max="100" /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="tuesday_split" id="tuesday_split" value="" max="100" /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="wednesday_split" id="wednesday_split" value="" max="100" /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="thursday_split" id="thursday_split" value="" max="100" /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="friday_split" id="friday_split" value="" max="100" /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="saturday_split" id="saturday_split" value="" max="100" /></div></td>
+                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="monday_split" id="monday_split" value="" max="100" {{ $disabled }} /></div></td>
+                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="tuesday_split" id="tuesday_split" value="" max="100" {{ $disabled }} /></div></td>
+                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="wednesday_split" id="wednesday_split" value="" max="100" {{ $disabled }} /></div></td>
+                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="thursday_split" id="thursday_split" value="" max="100" {{ $disabled }} /></div></td>
+                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="friday_split" id="friday_split" value="" max="100" {{ $disabled }} /></div></td>
+                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="saturday_split" id="saturday_split" value="" max="100" {{ $disabled }}/></div></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -399,7 +399,7 @@
                                                             <span class="cpm au-input au-input--full form-control disable-bg "></span>
                                                         </div>
                                                         <div class="col-md-6 form-group-inline form-group col-xxl-4">
-                                                            <label for="date_change">Date Change</label>
+                                                            <label for="date_change">Change Date</label>
                                                             <input type="text" class="date_change au-input au-input--full form-control disable-bg" name="date_change" value="" disabled="">
                                                         </div>
                                                         <div class="col-md-6 form-group-inline form-group col-xxl-4">

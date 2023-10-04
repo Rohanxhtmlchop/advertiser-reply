@@ -208,12 +208,20 @@ class CampaignController extends Controller
             ]);
             $demographicList = Demographic::where('status','=',1)->get(['id','name'])->toArray();
             $daypartsList = DayParts::where('status','=',1)->get(['id','name'])->toArray();
-            if( !empty( $campaignList ) ){
+            $disabled = ''; 
+            if( $request->has('type') ) {
+                $type = base64_decode($request->query('type'));
+                if( $type == 1 ){
+                    $disabled = 'disabled';
+                }
+            }
+        if( !empty( $campaignList ) ){
             $data = array(
                 'title' => 'Edit Campaign',
                 'campaign' => $campaignList->toArray(),
                 'demographicList' => $demographicList,
                 'dayPartList' => $daypartsList,
+                'disabled' => $disabled,
             );
             return view( 'pages.campaign.edit', $data );
         }else{
@@ -222,6 +230,7 @@ class CampaignController extends Controller
                 'campaign' => '',
                 'demographicList' => $demographicList,
                 'dayPartList' => $daypartsList,
+                'disabled' => $disabled,
             );
             return view( 'pages.campaign.edit', $data );
         }

@@ -69,6 +69,7 @@ class JsonInsertDataController extends Controller
                         //$jsonHTML .='</div>';
                     $jsonHTML .='</tr>';
                 }
+                
                 foreach( $jsonFileFields as $jsonFileFieldsKey => $jsonFileFieldsVal ){
                     if( array_key_exists($jsonFileFieldsKey, $tableFieldsList) ) {
                         $jsonInput = Helper::getInput($tableFieldsList[$jsonFileFieldsKey], $fieldId, $jsonFileFieldsVal, 'field-exists');
@@ -77,6 +78,7 @@ class JsonInsertDataController extends Controller
                     }
                     $jsonFieldNameRemoveUndersocde = Helper::removeUnderscore($jsonFileFieldsKey);
                     $addEvenOddClass = ( $fieldId % 2) ? 'odd':'even';
+                    
                     $jsonHTML .= '<tr class="tr-shadow '.$addEvenOddClass.' ">';
                        // $jsonHTML .='<div class="row align-items-center">';
                             $jsonHTML .='<td class="form-group text-right" attr-name="'.$jsonFileFieldsKey.'">';
@@ -92,6 +94,7 @@ class JsonInsertDataController extends Controller
                                 $jsonHTML .='<select name="select_db_field[]" id="select_db_field_'.$fieldId.'" class="au-input au-input--full valid form-control" aria-invalid="false">';
                                     $jsonHTML .='<option value="">Table Fields Option</option>';
                                     foreach($tableFieldsList as $tableFieldsListKey => $tableFieldsListVal ){
+                                       // print_r($tableFieldsList);
                                         $selected  = ( $jsonFileFieldsKey == $tableFieldsListKey )? 'selected="selected"':'';
                                         $jsonHTML .='<option value="'.Helper::addUnderscore($tableFieldsListKey).'" attr-key="" '.$selected.'>'.Helper::removeUnderscore($tableFieldsListKey).'</option>';
                                     }
@@ -119,6 +122,8 @@ class JsonInsertDataController extends Controller
         $advertiserId = Session::get('advertiser_id');
         $clientId = Session::get('clients_id');
         $mediasId = Session::get('medias_id');
+        $advertiserName = Session::get('advertiser_name');
+        $clientName = Session::get('clent_name');
         if( count( $request['data'] ) > 0 ){
             $tableFields = Helper::tableOfFields($request['data']);
             $data = '';
@@ -170,10 +175,22 @@ class JsonInsertDataController extends Controller
                 $tableHTML = '';
                 foreach( $tableFields as $tableFieldsKey => $tableFieldsVal ){
                     $tableFieldName = Helper::removeUnderscore($tableFieldsKey);
-                    $tableHTML .='<tr class="tr-shadow">';
-                        $tableHTML .='<th class="new-campaign-id">'.$tableFieldName.'</th>';
-                        $tableHTML .='<td class="new-campaign-name">'.$tableFieldsVal.'</td>';
-                    $tableHTML .='</tr>';
+                    if( $tableFieldsKey == 'advertiser_name'){
+                        $tableHTML .='<tr class="tr-shadow">';
+                            $tableHTML .='<th class="new-campaign-id">'.$tableFieldName.'</th>';
+                            $tableHTML .='<td class="new-campaign-name">'.$advertiserName.'</td>';
+                        $tableHTML .='</tr>';
+                    }else if( $tableFieldsKey == 'client_name'){
+                        $tableHTML .='<tr class="tr-shadow">';
+                            $tableHTML .='<th class="new-campaign-id">'.$tableFieldName.'</th>';
+                            $tableHTML .='<td class="new-campaign-name">'.$clientName.'</td>';
+                        $tableHTML .='</tr>';
+                    } else {
+                        $tableHTML .='<tr class="tr-shadow">';
+                            $tableHTML .='<th class="new-campaign-id">'.$tableFieldName.'</th>';
+                            $tableHTML .='<td class="new-campaign-name">'.$tableFieldsVal.'</td>';
+                        $tableHTML .='</tr>';
+                    }
                 }
                 return response()->json($tableHTML);  
             }

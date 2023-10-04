@@ -123,7 +123,7 @@ class DealController extends Controller
                         $dealViewTableHtml .='<td class="'.  $tableRowDetailKey .'">'. $dealViewTable['dayTableData'][$key] . $tableRowDetail .'</td>';
                     } else if(  $tableRowDetailKey == 'campaign_number' ){
                         if( $tableRowDetail != ''){
-                            $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'"><a href="'. URL::to('/campaign/edit/'.base64_encode($tableRowDetail)) .'">'. $tableRowDetail .'</a></td>';
+                            $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'"><a href="'. URL::to('/campaign/edit/'.base64_encode($tableRowDetail).'?type='.base64_encode(1)) .'">'. $tableRowDetail .'</a></td>';
                         } else {
                             $dealViewTableHtml .='<td class="'. $tableRowDetailKey .'">-</td>';
                         }

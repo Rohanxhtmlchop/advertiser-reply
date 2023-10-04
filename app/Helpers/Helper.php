@@ -429,6 +429,9 @@ class Helper{
                     if( $flag == 1 ){
                         $selected = ( $fieldValue == $dropdownArrayValue['id'] ) ? 'selected="selected"' : ""; 
                         $dropdownHTML .= '<option value="'.$dropdownArrayValue['id'].'" '.$selected.'>'.$dropdownArrayValue['name'].' ('.$dropdownArrayValue['id'].')</option>';
+                    } else if( $flag == 2 ){
+                        $selected = ( $fieldValue == $dropdownArrayValue['id'] ) ? 'selected="selected"' : ""; 
+                        $dropdownHTML .= '<option value="'.$dropdownArrayValue['name'].'" '.$selected.'>'.$dropdownArrayValue['name'].' ('.$dropdownArrayValue['id'].')</option>';
                     } else {
                         $selected = ( $fieldValue == $dropdownArrayValue['name'] ) ? 'selected="selected"' : ""; 
                         $dropdownHTML .= '<option value="'.$dropdownArrayValue['name'].'" '.$selected.'>'.$dropdownArrayValue['name'].'</option>';
@@ -450,8 +453,19 @@ class Helper{
                 ->where('deals.media_id', '=', $mediasId)
                 ->where('deals.client_id', '=', $clientsId)
                 ->get(['deals.id as id','deal_payloads.name as name'])->toArray();
-                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
+                $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,2);
             break;
+            case "deal_payload_name":
+                if(is_numeric($selectOptionName)){
+                $dealView = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
+                ->where('deals.advertiser_id', '=', $advertiserId)
+                ->where('deals.media_id', '=', $mediasId)
+                ->where('deals.client_id', '=', $clientsId)
+                ->get(['deals.id as id','deal_payloads.name as name'])->toArray();
+                    $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,1);
+                }
+            break;
+
             case "demographic_name":
                 $dealView = Demographic::where('client_id', '=', $clientsId)->where('status', '=', 1)->get(['id','name'])->toArray();
                 $tableData = Helper::createTableFieldDropdown($tablename,$dealView,$selectOptionName,0);
