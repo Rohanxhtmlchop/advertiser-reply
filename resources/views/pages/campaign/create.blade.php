@@ -1,20 +1,17 @@
 @extends('layouts.default')
-@section('title') {{'Edit Campaign'}} @endsection
+@section('title') {{'Create Campaign'}} @endsection
 @section('content')
     <div class="main-content campaign-edit">
         <div class="section__content section__content--p10">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 card-main">
-                        @if( !empty( $campaign ) )
                         <div class="deal-view-box">
                             <div class="campaign-number-time-sec mb-3">
                                 <div class="campaign-number text-center">
-                                    <h4>Editing Campaign : {{ $campaign['campaign_payloads_id'] }} {{ $campaign['campaign_payloads_name'] }}</h4>
+                                    <h4>Create Campaign</h4>
                                 </div>
-                                <div class="campaign-date text-center">
-                                    <span>Deal {{ $campaign['campaigns_deal_id'] }} Valid From date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_from'])) }} to Till date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_to'])) }}  Deal Year {{ $campaign['campaigns_year'] }}</span>
-                                </div>
+                               
                             </div>
                             <form method="post" id="edit_campaign">
                             @csrf
@@ -59,92 +56,114 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <input type="hidden" id="advertiser_name" name="advertiser_name" value="{{ Session::get('user_name')}}">
-                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                        <!--<div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="campaign_number">Campaign Number</label>
                                                             <input type="text" id="campaign_number" class="au-input au-input--full form-control campaign_number" name="campaign_number" value="" disabled="">
+                                                        </div> -->
+                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                            <label for="campaign_name">Deal Name</label>
+                                                            <select name="deals_number" class="au-input au-input--full form-control option" type="select" id="brand_name"  >
+                                                                <option value="">Select Deals</option>
+                                                                @if( count( $dealViewOption ) > 0 )
+                                                                    @foreach( $dealViewOption as $dealViewOptionKey => $dealViewOptionVal )
+                                                                        <option value="{{ $dealViewOptionVal['id'] }}">{{ $dealViewOptionVal['name'] }}</option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="campaign_name">Campaign Name</label>
-                                                            <input type="text" id="campaign_name"class="au-input au-input--full form-control campaign_name"name="campaign_name" value="" disabled="">
+                                                            <input type="text" id="campaign_name"class="au-input au-input--full form-control campaign_field campaign_name" name="campaign_name" value="" >
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="brand_name">Brand</label>
-                                                            <input type="text" id="brand_name"class="au-input au-input--full form-control brand_name"name="brand_name" value="" disabled="">
+                                                            <select name="brand_name" class="au-input au-input--full form-control option" type="select" id="brand_name"  >
+                                                                <option value="">Select Brand</option>
+                                                                @if( count( $brandList ) > 0 )
+                                                                    @foreach( $brandList as $brandListKey => $brandListVal )
+                                                                        <option value="{{ $brandListVal['id'] }}">{{ $brandListVal['name'] }}</option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
+                                                            <!--<input type="text" id="brand_name"class="au-input au-input--full form-control campaign_field brand_name" name="brand_name" value="" >-->
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="media_line">Media Line</label>
-                                                            <input type="text" id="media_line"class="au-input au-input--full form-control media_line_name"name="media_line_name" value="" disabled="">
+                                                            <input type="text" id="media_line"class="au-input au-input--full form-control campaign_field media_line_name" name="media_line_name" value="{{ Session::get('media_line')}}" disabled >
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="dollar_rate">$ Rate</label>
-                                                            <input type="text" id="dollar_rate"class="au-input au-input--full form-control"name="dollar_rate" value="" disabled="">
+                                                            <input type="text" id="dollar_rate"class="au-input au-input--full form-control campaign_field" name="dollar_rate" value="" >
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="agency_name">Agency Name</label>
-                                                            <input type="text" id="agency_name"class="au-input au-input--full form-control"name="agency_name" value="" disabled="">
+                                                            <select name="agency_name" class="au-input au-input--full form-control option" type="select"  id="agency_name"  >
+                                                                <option value="">Select Agency</option>
+                                                                @if( count( $agencyList ) > 0 )
+                                                                    @foreach( $agencyList as $agencyListKey => $agencyListVal )
+                                                                        <option value="{{ $agencyListVal['id'] }}">{{ $agencyListVal['name'] }}</option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
+                                                            <!--<input type="text" id="agency_name"class="au-input au-input--full form-control campaign_field" name="agency_name" value="" >-->
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="demo_name">Demo</label>
-                                                            <input type="text" id="demo_name"class="au-input au-input--full form-control"name="demo_name" value="" disabled="">
+                                                            <input type="text" id="demo_name"class="au-input au-input--full form-control campaign_field" name="demo_name" value="" >
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="ae_name">AE</label>
-                                                            <input type="text" id="ae_name"class="au-input au-input--full form-control"name="ae_name" value="" disabled="">
+                                                            <input type="text" id="ae_name"class="au-input au-input--full form-control campaign_field" name="ae_name" value="" >
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="outlet_name">Outlet</label>
-                                                            <input type="text" id="outlet_name"class="au-input au-input--full form-control"name="outlet_name" value="" disabled="">
+                                                            <select name="outlet_name" class="au-input au-input--full form-control option" type="select"  id="outlet_name"  >
+                                                                <option value="">Select Outlets</option>
+                                                                @if( count( $outletsList ) > 0 )
+                                                                    @foreach( $outletsList as $outletsListKey => $outletsListVal )
+                                                                        <option value="{{ $outletsListVal['id'] }}">{{ $outletsListVal['name'] }}</option>
+                                                                    @endforeach
+                                                                @endif
+                                                            </select>
+                                                            <!--<input type="text" id="outlet_name"class="au-input au-input--full form-control campaign_field" name="outlet_name" value="" >-->
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="market_place">Market Place</label>
-                                                            <input type="text" id="market_place"class="au-input au-input--full form-control"name="market_place" value="" disabled="">
+                                                            <input type="text" id="market_place"class="au-input au-input--full form-control campaign_field" name="market_place" value="" >
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="realistic">Realistic</label>
                                                             <div class="number-field">
-                                                                <input type="text" id="realistic"class="au-input au-input--full form-control"name="realistic" value="" disabled="">
+                                                                <input type="text" id="realistic"class="au-input au-input--full form-control campaign_field" name="realistic" value="" >
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="agency_commision">Agency Commision</label>
                                                             <div class="number-field">
-                                                                <input type="text" id="agency_commision"class="au-input au-input--full form-control"name="agency_commision" value="" disabled="">
+                                                                <input type="text" id="agency_commision"class="au-input au-input--full form-control campaign_field" name="agency_commision" value="" >
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="revenue_risk">Revenue Risk</label>
                                                             <div class="number-field">
-                                                                <input type="text" id="revenue_risk"class="au-input au-input--full form-control"name="revenue_risk" value="" disabled="">
+                                                                <input type="text" id="revenue_risk"class="au-input au-input--full form-control campaign_field" name="revenue_risk" value="" >
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="budget">Budget</label>
-                                                            <input type="text" id="budget"class="au-input au-input--full form-control"name="budget" value="" disabled="">
+                                                            <input type="text" id="budget"class="au-input au-input--full form-control campaign_field" name="budget" value="" >
                                                         </div>
-                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
+                                                        <div class="col-md-6 col-xxl-4 form-group-inline">
                                                         </div>
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                             <label for="change_by">Created By</label>
-                                                            <input type="text" id="created_by"class="au-input au-input--full form-control"name="created_by_old" value="" disabled="">
+                                                            <input type="text" id="created_by"class="au-input au-input--full form-control" name="created_by_old" value="" >
                                                         </div>
-                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
-                                                            <label for="change_by">Created Date</label>
-                                                            <input type="text" id="created_date"class="au-input au-input--full form-control"name="created_date_old" value="" disabled="">
-                                                        </div>
-                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
-                                                        </div>
-                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
-                                                        <label for="change_by">Change By</label>
-                                                            <input type="text" id="change_by"class="au-input au-input--full form-control"name="change_by_old" value="" disabled="">
-                                                        </div>
-                                                        <div class="col-md-6 col-xxl-4 form-group form-group-inline">
-                                                            <label for="change_by">Change Date</label>
-                                                            <input type="text" id="change_date"class="au-input au-input--full form-control"name="change_date_old" value="" disabled="">
-                                                        </div>
+                                                        
                                                         <div class="col-md-6 col-xxl-4 form-group form-group-inline">
                                                         </div>
                                                         <div class="btn-row mt-3 text-center">
-                                                            <a href="javascript:void(0);" class="btn btn-lg btn-secondary tab-btn" attr-active="cpm-imp" >Go To CPM/IPM</a>
+                                                            <a href="javascript:void(0);" class="btn btn-lg btn-secondary tab-btn cpm-imp-btn" attr-active="cpm-imp" >Go To CPM/IPM</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -167,7 +186,7 @@
                                                                     <label for="realistic">Demographics</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <select name="demographic_name" class="au-input au-input--full form-control" id="demographic_name" {{ $disabled }} >
+                                                                    <select name="demographic_name" class="au-input au-input--full form-control" type="select"  id="demographic_name"  >
                                                                     <option value="">Demographic</option>
                                                                     @if( count( $demographicList ) > 0 )
                                                                         @foreach( $demographicList as $demographicListKey => $demographicListVal )
@@ -184,7 +203,7 @@
                                                                     <label for="demo_population">Demo Population</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="number" name="cpm_ipm_demo_population" class="au-input--full form-control" value="" {{ $disabled }} >
+                                                                    <input type="number" name="cpm_ipm_demo_population" class="au-input--full form-control" value=""  >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -194,7 +213,7 @@
                                                                     <label for="demo_population">Impressions</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="number" name="cpm_ipm_impressions" class="au-input--full form-control" value="" {{ $disabled }} >
+                                                                    <input type="number" name="cpm_ipm_impressions" class="au-input--full form-control" value=""  >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -204,7 +223,7 @@
                                                                     <label for="demo_population">GRP</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="number" name="cpm_ipm_grp" class="au-input--full form-control" value="" {{ $disabled }} >
+                                                                    <input type="number" name="cpm_ipm_grp" class="au-input--full form-control" value=""  >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -214,13 +233,13 @@
                                                                     <label for="demo_population">CPM</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="number" name="cpm_ipm_cpm" class="au-input--full form-control" value="" {{ $disabled }} >
+                                                                    <input type="number" name="cpm_ipm_cpm" class="au-input--full form-control" value=""  >
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="btn-row mt-3 text-center">
                                                             <a href="javascript:void(0);" class="btn btn-lg btn-secondary tab-btn" attr-active="general" >Go To General</a>
-                                                            <a href="javascript:void(0);" class="btn btn-lg btn-secondary ml-md-3 tab-btn" attr-active="flighting" >Go To Flighting</a>
+                                                            <a href="javascript:void(0);" class="btn btn-lg btn-secondary ml-md-3 tab-btn flighting-btn" attr-active="flighting" >Go To Flighting</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -241,7 +260,7 @@
                                                         <div class="col-md-6">
                                                             <div class="row">
                                                                 <div class="col-md-6 form-group date-field">
-                                                                    <input type="text" placeholder="Flight Start Date" id="flight_start_date" class="au-input au-input--full form-control" name="flight_start_date" {{ $disabled }} >
+                                                                    <input type="text" placeholder="Flight Start Date" id="flight_start_date" class="au-input au-input--full form-control" name="flight_start_date"  >
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
                                                                     <input type="text" id="campaign_flight_start_date" placeholder="MM/DD/YYYY" class="au-input au-input--full form-control" name="campaign_flight_start_date" value=""disabled="">
@@ -254,7 +273,7 @@
                                                                     <label for="revenue_risk">Ad Length</label>
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
-                                                                    <input type="text" id="ad_length" class="au-input au-input--full form-control" name="ad_length" value=""  {{ $disabled }}>
+                                                                    <input type="text" id="ad_length" class="au-input au-input--full form-control" name="ad_length" value=""  >
                                                                     <input type="hidden" id="ad_length_old" class="au-input au-input--full form-control" name="ad_length_old" value="">
                                                                 </div>
                                                             </div>
@@ -262,7 +281,7 @@
                                                         <div class="col-md-6">
                                                             <div class="row">
                                                                 <div class="col-md-6 form-group date-field">
-                                                                    <input type="text" placeholder="Flight End Date" id="flight_end_date" class="au-input au-input--full form-control" name="flight_end_date"  {{ $disabled }} >
+                                                                    <input type="text" placeholder="Flight End Date" id="flight_end_date" class="au-input au-input--full form-control" name="flight_end_date"   >
                                                                 </div>
                                                                 <div class="col-md-6 form-group">
                                                                     <input type="text" id="campaign_flight_end_date" placeholder="MM/DD/YYYY" class="au-input au-input--full form-control" name="campaign_flight_end_date" value=""disabled="">
@@ -272,7 +291,7 @@
                                                         <div class="col-md-6">
                                                             <div class="row">
                                                                 <div class="col-md-6 form-group">
-                                                                    <select name="day_parts_id"class="au-input au-input--full form-control" id="day_parts_id"  {{ $disabled }}>
+                                                                    <select name="day_parts_id"class="au-input au-input--full form-control" id="day_parts_id"  >
                                                                     <option value="">Time / Day Part</option>
                                                                                 @if( count( $dayPartList ) > 0 )
                                                                                     @foreach( $dayPartList as $dayPartListKey => $dayPartListVal )
@@ -305,27 +324,27 @@
                                                             <tbody>
                                                                 <tr class="day-checkbox-list">
                                                                     <td>Days</td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="S" id="sunday" value="sunday" {{ $disabled }} /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="M" id="monday" value="monday" {{ $disabled }}  /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="T" id="tuesday" value="tuesday" {{ $disabled }}  /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="W" id="wednesday" value="wednesday" {{ $disabled }} /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="T" id="thursday" value="thursday" {{ $disabled }} /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="F" id="friday" value="friday" {{ $disabled }} /></div></td>
-                                                                    <td><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="S" id="saturday" value="saturday" {{ $disabled }} /></div></td>
+                                                                    <td class="day-checkbox" ><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="S" id="sunday" value="sunday"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="M" id="monday" value="monday"   /></div></td>
+                                                                    <td class="day-checkbox" ><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="T" id="tuesday" value="tuesday"   /></div></td>
+                                                                    <td class="day-checkbox" ><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="W" id="wednesday" value="wednesday"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="T" id="thursday" value="thursday"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="F" id="friday" value="friday"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="form-check"><input type="checkbox" class="form-check-input" name="days[]" day="S" id="saturday" value="saturday"  /></div></td>
                                                                 </tr>
                                                                 <tr class="day-split-checkbox-list">
                                                                     <td>Split</td>
-                                                                    <td>
+                                                                    <td class="day-checkbox" >
                                                                         <div class="number-field">    
-                                                                            <input type="number" class="au-input form-control" name="sunday_split" id="sunday_split" value="" max="100" {{ $disabled }} />
+                                                                            <input type="number" class="au-input form-control" name="sunday_split" id="sunday_split" value="" max="100"  />
                                                                         </div>
                                                                     </td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="monday_split" id="monday_split" value="" max="100" {{ $disabled }} /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="tuesday_split" id="tuesday_split" value="" max="100" {{ $disabled }} /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="wednesday_split" id="wednesday_split" value="" max="100" {{ $disabled }} /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="thursday_split" id="thursday_split" value="" max="100" {{ $disabled }} /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="friday_split" id="friday_split" value="" max="100" {{ $disabled }} /></div></td>
-                                                                    <td><div class="number-field"><input type="number" class="au-input form-control" name="saturday_split" id="saturday_split" value="" max="100" {{ $disabled }}/></div></td>
+                                                                    <td class="day-checkbox" ><div class="number-field"><input type="number" class="au-input form-control" name="monday_split" id="monday_split" value="" max="100"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="number-field"><input type="number" class="au-input form-control" name="tuesday_split" id="tuesday_split" value="" max="100"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="number-field"><input type="number" class="au-input form-control" name="wednesday_split" id="wednesday_split" value="" max="100"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="number-field"><input type="number" class="au-input form-control" name="thursday_split" id="thursday_split" value="" max="100"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="number-field"><input type="number" class="au-input form-control" name="friday_split" id="friday_split" value="" max="100"  /></div></td>
+                                                                    <td class="day-checkbox" ><div class="number-field"><input type="number" class="au-input form-control" name="saturday_split" id="saturday_split" value="" max="100" /></div></td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -350,10 +369,10 @@
                                                 role="tabpanel" aria-labelledby="heading-D">
                                                 <div class="card-body" id="summary">
                                                     <div class="row mb-2">
-                                                        <div class="col-md-6 form-group-inline form-group col-xxl-4">
+                                                        <!--<div class="col-md-6 form-group-inline form-group col-xxl-4">
                                                             <label for="campaign_number">Campaign Number</label>
                                                             <span class="campaign_number au-input au-input--full form-control disable-bg "></span>
-                                                        </div>
+                                                        </div> -->
                                                         <div class="col-md-6 form-group-inline form-group col-xxl-4">
                                                             <label for="campaign_name">Campaign Name</label>
                                                             <input type="text" class="campaign_name au-input au-input--full form-control disable-bg" name="campaign_name_change" value="" disabled="">
@@ -408,11 +427,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="new-campaign-table mb-2">
-                                                    @if( $style == '' )
-                                                        <h4>New Detail</h4>
-                                                    @else
-                                                        <h4>Detail</h4>
-                                                    @endif;
+                                                    <h4>Detail</h4>
                                                         <div class="flight-date row">
                                                             <div class="col-lg-6 form-group form-group-inline flight-start-date">
                                                                 <span class="label">Flight Start Date</span>
@@ -427,7 +442,6 @@
                                                             <table id="new_campaign_table"  class="table custom-table table-borderless table-striped dataTable no-footer"  style="width:100%">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th>Campaign Number</th>
                                                                         <th>Campaign Name</th>
                                                                         <th>Title</th>
                                                                         <th>Day/ Time</th>
@@ -446,14 +460,13 @@
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr class="tr-shadow">
-                                                                        <td class="new-campaign-id"></td>
-                                                                        <td class="new-campaign-name" ></td>
-                                                                        <td class="new-campaign-deal-name" ></td>
+                                                                        <td class="campaign_name" ></td>
+                                                                        <td class="campaign_name" ></td>
                                                                         <td class="new-campaign_day-time" ></td>
-                                                                        <td class="new-campaign-brand" ></td>
+                                                                        <td class="brand_name" ></td>
                                                                         <td class="new-campaign-start-flight-date" ></td>
                                                                         <td class="new-campaign-end-flight-date" ></td>
-                                                                        <td class="new-campaign-media-line" ></td>
+                                                                        <td class="media_line_name" ></td>
                                                                         <td class="new-campaign-inv-type" ></td>
                                                                         <td class="new-campaign-inv-length" ></td>
                                                                         <td class="new-campaign-rate" ></td>
@@ -466,68 +479,11 @@
                                                             </table>
                                                         </div>
                                                     </div>
-                                                    @if( $style == '' )
-                                                        <div class="old-campaign-table">
-                                                            <h4>Old Detail</h4>
-                                                            <div class="flight-date row">
-                                                                <div class="flight-start-date form-group form-group-inline col-lg-6">
-                                                                    <span class="label">Flight Start Date</span>
-                                                                    <span class="flight-stat-date-text au-input au-input--full form-control">MM/DD/YYYY</span>
-                                                                </div>
-                                                                <div class="flight-end-date form-group form-group-inline col-lg-6">
-                                                                    <span class="label">Flight End Date</span>
-                                                                    <span class="flight-end-date-text au-input au-input--full form-control">MM/DD/YYYY</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="old-campaign-table-box table-responsive">
-                                                                <table id="old_campaign_table" class="table custom-table table-borderless table-striped dataTable no-footer" style="width:100%">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Campaign Number</th>
-                                                                            <th>Campaign Name</th>
-                                                                            <th>Title</th>
-                                                                            <th>Day/ Time</th>
-                                                                            <th>Brand</th>
-                                                                            <th>Start Flight</th>
-                                                                            <th>End Flight</th>
-                                                                            <th>Media Line</th>
-                                                                            <th>Inv Type</th>
-                                                                            <th>Inv Length</th>
-                                                                            <th>$ Rate</th>
-                                                                            <th>$ Rate</th>
-                                                                            <th>% Rate</th>
-                                                                            <th>Total Avails</th>
-                                                                            <th>Total Unit</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr class="tr-shadow">
-                                                                            <td class="old-campaign-id"></td>
-                                                                            <td class="old-campaign-name" ></td>
-                                                                            <td class="old-campaign-deal-name" ></td>
-                                                                            <td class="old-campaign_day-time" ></td>
-                                                                            <td class="old-campaign-brand" ></td>
-                                                                            <td class="old-campaign-start-flight-date" ></td>
-                                                                            <td class="old-campaign-end-flight-date" ></td>
-                                                                            <td class="old-campaign-media-line" ></td>
-                                                                            <td class="old-campaign-inv-type" ></td>
-                                                                            <td class="old-campaign-inv-length" ></td>
-                                                                            <td class="old-campaign-rate" ></td>
-                                                                            <td class="old-campaign-do-rate" ></td>
-                                                                            <td class="old-campaign-per-rate" ></td>
-                                                                            <td class="old-campaign-total-avail" ></td>
-                                                                            <td class="old-campaign-total-unit" ></td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                        <div class="btn-row mt-3 text-center">
-                                                            <a href="javascript:void(0);" class="btn btn-lg btn-secondary keep-original" attr-active="cpm-imp" >Discard Changes</a>
-                                                            <a href="javascript:void(0);" class="btn btn-lg btn-secondary ml-md-3 tab-btn" attr-active="flighting" >Go To Flighting</a>
-                                                            <input type="submit" class="btn btn-lg btn-secondary ml-md-3 send-to-approval" name="submit" id="submit" value="Send To Approval" disabled>
-                                                        </div>
-                                                    @endif
+                                                    <div class="btn-row mt-3 text-center">
+                                                        <a href="javascript:void(0);" class="btn btn-lg btn-secondary keep-original" attr-active="cpm-imp" >Discard Changes</a>
+                                                        <a href="javascript:void(0);" class="btn btn-lg btn-secondary ml-md-3 tab-btn" attr-active="flighting" >Go To Flighting</a>
+                                                        <input type="submit" class="btn btn-lg btn-secondary ml-md-3 send-to-approval" name="submit" id="submit" value="Send To Approval" disabled>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -535,11 +491,6 @@
                                 </div>
                             </form>
                         </div>
-                        @else
-                        <div class="deal-view-box card">
-                            <h4>Error Please check Campaign Id</h4>
-                        </div>    
-                        @endif
                     </div>
                 </div>
             </div>        

@@ -64,57 +64,37 @@ class Helper{
 
     public static function dealStatusArray(){
         $dealStatus = Statu::orderBy('id', 'asc')->get()->toArray();
-        /*$dealStatus = array(
-            array(
-                'id' => 1,
-                'name' => 'Inflight',
-                'slug' => 'inflight',
-                'icon' => 'fa fa-plane',
-                'background' => 'overview-item--c1'
-            ),
-            array(
-                'id' => 2,
-                'name' => 'Proposal',
-                'slug' => 'proposal',
-                'icon' => 'fa fa-file',
-                'background' => 'overview-item--c2'
-            ),
-            array(
-                'id' => 3,
-                'name' => 'Ended',
-                'slug' => 'ended',
-                'icon' => 'fa fa-clock-o',
-                 'background' => 'overview-item--c3'
-            ),
-            array(
-                'id' => 4,
-                'name' => 'Approved',
-                'slug' => 'approved',
-                'icon' => 'fa fa-thumbs-up',
-                 'background' => 'overview-item--c4'
-            ),
-            array(
-                'id' => 5,
-                'name' => 'Ordered',
-                'slug' => 'order',
-                'icon' => 'fa fa-shopping-cart',
-                 'background' => 'overview-item--c1'
-            ),
-            array(
-                'id' => 6,
-                'name' => 'Planning',
-                'slug' => 'planning',
-                'icon' => 'fa fa-list-alt',
-                 'background' => 'overview-item--c2'
-            ),
-            array(
-                'id' => 7,
-                'name' => 'Expired',
-                'slug' => 'expired',
-                'icon' => 'fa fa-clock-o',
-                 'background' => 'overview-item--c3'
-            ),
-        );*/
+        return $dealStatus;
+    }
+
+    public static function brandArray(){
+        $advertiserId = Session::get('advertiser_id');
+        $clientId = Session::get('clients_id');
+        $dealStatus =  Brands::orderBy('id', 'asc')
+                        ->where('advertiser_id', '=', $advertiserId)
+                        ->where('client_id','=', $clientId)
+                        ->where('status','=',1)
+                        ->get(['id','product_name as name'])->toArray();
+        return $dealStatus;
+    }
+
+    public static function agencyArray(){
+        $advertiserId = Session::get('advertiser_id');
+        $clientId = Session::get('clients_id');
+        $dealStatus =  Agencys::orderBy('id', 'asc')
+                        ->where('client_id','=', $clientId)
+                        ->where('status','=',1)
+                        ->get(['id','name'])->toArray();
+        return $dealStatus;
+    }
+
+    public static function outletsArray(){
+        $advertiserId = Session::get('advertiser_id');
+        $clientId = Session::get('clients_id');
+        $dealStatus =  Outlets::orderBy('id', 'asc')
+                        ->where('client_id','=', $clientId)
+                        ->where('status','=',1)
+                        ->get(['id','outlet_type as name'])->toArray();
         return $dealStatus;
     }
 

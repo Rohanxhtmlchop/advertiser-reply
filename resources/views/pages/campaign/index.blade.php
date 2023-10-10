@@ -50,7 +50,7 @@
                             <div class="d-flex justify-content-center align-items-center  create-campaign-btn">
                                 <div class="d-flex align-items-center flight-range select">
                                     <div class="daterange d-flex align-items-center">
-                                        <button class="btn btn-lg btn-secondary" >Create Campaign</button>    
+                                        <a class="btn btn-lg btn-secondary" href="{{ route('campaign.create') }}">Create Campaign</a>    
                                     </div>
                                 </div>
                             </div>

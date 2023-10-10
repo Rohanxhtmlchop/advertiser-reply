@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\URL;
 
 class CampaignController extends Controller
 {
@@ -70,10 +71,10 @@ class CampaignController extends Controller
         return $cahngeDateFormateFlightStart;
     }
     public function index(){
-        $advertiserId = Session::get('advertiser_id');
         $campaignTableTitle = Helper::campaignViewTableName();
         $dealStatusArray = Helper::dealStatusArray();
         $dealViewArray = Helper::dealViewArray();
+        
         $data = array( 
             'title' => 'Campaign',
             'tableTitle' => $campaignTableTitle,
@@ -110,6 +111,7 @@ class CampaignController extends Controller
             foreach( $campaignViewTable as $key => $tableDetailRowVal ){
                 $campaignViewTableHtml .= '<tr class="tr-shadow">';
                     foreach( $tableDetailRowVal as $tableRowDetailKey => $tableRowDetail ){
+                        
                         if( $tableRowDetailKey == 'deal_auto_id' ) {
                             if( ( $tableDetailRowVal['status'] == 'Under Approval' ) || ( $tableDetailRowVal['status'] == 'InflIght' ) ){
                                 $campaignViewTableHtml .='<td></td>';
@@ -119,9 +121,15 @@ class CampaignController extends Controller
                                 $campaignURL = url($path); 
                                 $campaignViewTableHtml .='<td><a href="'.$campaignURL.'"><i class="fa fa-pencil-alt fa-lg"></i></a></td>';
                             }
+                        } else if(  $tableRowDetailKey == 'campaign_id' ){
+                            if( $tableRowDetail != ''){
+                                $campaignViewTableHtml .='<td class="'. $tableRowDetailKey .'"><a href="'. URL::to('/campaign/edit/'.base64_encode($tableRowDetail).'?type='.base64_encode(1)) .'">'. $tableRowDetail .'</a></td>';
+                            } else {
+                                $campaignViewTableHtml .='<td class="'. $tableRowDetailKey .'">-</td>';
+                            }
                         } else if( $tableRowDetailKey != 'show_data'){
                             $campaignViewTableHtml .='<td class="'. $tableRowDetailKey .'">'. $tableRowDetail .'</td>';
-                        }
+                        } 
                     }    
                     $campaignViewTableHtml .='</tr>';
             }
@@ -129,6 +137,33 @@ class CampaignController extends Controller
         return response()->json(array( 'deal_view_data' => $dealView, 'deal_table_html' => $campaignViewTableHtml ));  
     }
 
+    /************************************* Create Campaign Detail  **************************************************/
+    
+    public function createCampaignInfo(Request $request){
+        $advertiserId = Session::get('advertiser_id');
+        $mediasId = Session::get('medias_id');
+        $clientsId = Session::get('clients_id');
+        $demographicList = Demographic::where('status','=',1)->get(['id','name'])->toArray();
+        $daypartsList = DayParts::where('status','=',1)->get(['id','name'])->toArray();
+        $brandList = Helper::brandArray();
+        $agencyList = Helper::agencyArray();
+        $outletsList = Helper::outletsArray();
+        $dealViewOptions = Deals::join('deal_payloads', 'deals.deal_payload_id', '=', 'deal_payloads.id')
+                ->where('deals.advertiser_id', '=', $advertiserId)
+                ->where('deals.media_id', '=', $mediasId)
+                ->where('deals.client_id', '=', $clientsId)
+                ->get(['deals.id as id','deal_payloads.name as name'])->toArray();
+        $data = array(
+            'demographicList' => $demographicList,
+            'dayPartList' => $daypartsList,
+            'brandList' => $brandList,
+            'agencyList' => $agencyList,
+            'outletsList' => $outletsList,
+            'dealViewOption' => $dealViewOptions,
+        );
+        return view( 'pages.campaign.create', $data );
+    }
+    
     /************************************* Edit Campaign Detail  **************************************************/
 
     public function getEditCampaignDetail(Request $request){
@@ -209,10 +244,12 @@ class CampaignController extends Controller
             $demographicList = Demographic::where('status','=',1)->get(['id','name'])->toArray();
             $daypartsList = DayParts::where('status','=',1)->get(['id','name'])->toArray();
             $disabled = ''; 
+            $style = ''; 
             if( $request->has('type') ) {
                 $type = base64_decode($request->query('type'));
                 if( $type == 1 ){
                     $disabled = 'disabled';
+                    $style = 'style="display:none;"';
                 }
             }
         if( !empty( $campaignList ) ){
@@ -222,6 +259,7 @@ class CampaignController extends Controller
                 'demographicList' => $demographicList,
                 'dayPartList' => $daypartsList,
                 'disabled' => $disabled,
+                'style' => $style,
             );
             return view( 'pages.campaign.edit', $data );
         }else{
@@ -231,11 +269,12 @@ class CampaignController extends Controller
                 'demographicList' => $demographicList,
                 'dayPartList' => $daypartsList,
                 'disabled' => $disabled,
+                'style' => $style,
             );
             return view( 'pages.campaign.edit', $data );
         }
     }
-
+    
     public function postEditCampaign( Request $request ){
         $advertiserId = Session::get('advertiser_id');
         $userId = Session::get('user_id');

@@ -109,7 +109,7 @@ $(document).ready(function () {
                         parentData.find('span.spinner').hide();
                         parentData.find('.next-step').prop('disabled',false);
                         if( response.status == 0 ){
-                            errorNotification( response.message )
+                            errorNotification( '<p>'+response.message+'</p>' )
                             return false;
                         } else {
                             $('#db_fields_mapping').empty().append(response);
@@ -219,7 +219,7 @@ $(document).ready(function () {
                             setTimeout( function() {window.location.href = URL  ; },1000 );
                             return true;
                         } else {
-                            errorNotification(response.message);
+                            errorNotification('<p>'+response.message+'</p>');
                             return false;
                         }
                     }

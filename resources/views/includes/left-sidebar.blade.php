@@ -12,7 +12,7 @@
                 <li class="{{ ( request()->is('deal') ) ? 'active' : '' }}" ><a href="{{ route('deal') }}"><i class="fa fa-thumbs-up"></i>Deal</a></li>
                 <li class="{{ ( request()->is('campaign/*') || request()->is('campaign') ) ? 'active' : '' }}"><a href="{{ route('campaign') }}"><i class="fa fa-bullhorn" aria-hidden="true"></i>Campaign</a></li>
                 <li><a href="{{ route('nopage') }}"><i class="fa fa-cogs" aria-hidden="true"></i>Ad Operation</a></li>
-                <li><a href="{{ route('nopage') }}"><i class="fa fa-user"></i>Advertiser Profile</a></li>
+                <li class="{{ ( request()->is('advertiserprofile') ) ? 'active' : '' }}" ><a href="{{ route('advertiserprofile') }}"><i class="fa fa-user"></i>Advertiser Profile</a></li>
                 <li><a href="{{ route('nopage') }}"><i class="fa fa-file"></i>Reports</a></li>
                 <li><a href="{{ route('nopage') }}"><i class="fa fa-users" aria-hidden="true"></i>Administration</a></li>
                 <li class="{{ ( request()->is('api-insert') ) ? 'active' : '' }}"><a href="{{ route('api-insert') }}"><i class="fa fa-database" aria-hidden="true"></i>API Insert</a></li>

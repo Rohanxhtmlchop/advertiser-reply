@@ -70,7 +70,7 @@ function sucessNotification( message ){
   });
 }
 function errorNotification( message ){
-  $(".alert-notification-error .error-message").empty().text(message);
+  $(".alert-notification-error .error-message").empty().append(message);
   $(".alert-notification-error").show('medium');
   setTimeout(function(){
     $(".alert-notification-error").hide('medium');

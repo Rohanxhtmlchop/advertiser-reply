@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     /******************************************************** Campaign page Start  ************************************************/
     function campaignGetId(){
         $('#campaign_table input[name="deal_number"]').click(function(){
@@ -10,6 +11,26 @@ $(document).ready(function(){
             var dealId = $(this).attr('dealid');
             var autoIncrementId = $(this).attr('autoincrementid');
             window.location.href = URL+'/campaign/edit/'+dealId;
+        });
+    }
+    function getNavigation(){
+        $('.responsive-tabs .tab-btn').click(function(e){
+            e.preventDefault();
+    
+            var tabClass = $(this).attr('attr-active'); 
+    
+            if( getFlightSplitCheck( this ) ){
+                $('ul.nav-tabs li a').each(function(){
+                    $(this).removeClass('active').attr('aria-selected', false);
+                });
+                $('#'+tabClass).addClass('active').attr('aria-selected', true);;
+          
+                $('#content .tab-pane').each(function(){
+                    $(this).removeClass('show').removeClass('active');
+                });
+                $('.'+tabClass+'-tab').addClass('show').addClass('active');
+            }
+           // getCampaignDetail();
         });
     }
     function getCampaginViewData( dealStatus = null){
@@ -59,17 +80,18 @@ $(document).ready(function(){
                     //var splitVal = $('#edit_flight tr.day-split-checkbox-list input[name="'+checkedVal+'"]').val();
                     if( splitVal ==  ''){
                         var uppercashDay = day.charAt(0).toUpperCase() + day.slice(1);
-                        errorNotification('Please Enter '+ uppercashDay +' Split Number.');
+                        errorNotification('<p>Please Enter '+ uppercashDay +' Split Number.</p>');
+                        '<p>'+response.message+'</p>'
                         response = false;
                     }
                     if( splitVal ==  0 ){
                         var uppercashDay = day.charAt(0).toUpperCase() + day.slice(1);
-                        errorNotification('Please Enter '+ uppercashDay +' Number Greater then 0.');
+                        errorNotification('<p>Please Enter '+ uppercashDay +' Number Greater then 0.</p>');
                         response = false;
                     }
                     if( checkboxChecked ==  false){
                         var uppercashDay = day.charAt(0).toUpperCase() + day.slice(1);
-                        errorNotification('Please Select '+ uppercashDay +' Checkbox.');
+                        errorNotification('<p>Please Select '+ uppercashDay +' Checkbox.</p>');
                         response = false;
                     }
                 }
@@ -89,6 +111,112 @@ $(document).ready(function(){
         dataAppend('#new_campaign_table .new-campaign_day-time', checkDayVal+' '+dayTimeVal,flag);
     }
 
+    function inputType(inputFrom){
+        var errorHTML = '';
+        var typeName = $(inputFrom).find('.form-control').attr('type');
+        if( ( typeName == 'text' ) || ( typeName == 'number' ) ){
+            var fieldVal = $(inputFrom).find('input[type="'+typeName+'"]').val();
+            var fieldName = $(inputFrom).find('input[type="'+typeName+'"]').attr('name');
+            if( fieldVal == '' ){
+                fieldName = fieldName.replaceAll("_", " ");
+                fieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+                errorHTML += '<p>Please Enter '+ fieldName +'.</p>';
+            } else {
+                var campaignValue =  $(inputFrom).find('input[type="'+typeName+'"]').val();
+                var campaignName =  $(inputFrom).find('input[type="'+typeName+'"]').attr('name');
+                dataAppend('#summary .'+campaignName, campaignValue, 1, '');
+            }
+        } else if( $(inputFrom).find('.form-control').attr('type') == 'select' ){
+            var fieldVal = $(inputFrom).find('select option').filter(":selected").val();
+            var fieldText = $(inputFrom).find('select option').filter(":selected").text();
+            var fieldName = $(inputFrom).find('select').attr('name');
+            if( fieldVal == '' ){
+                fieldName = fieldName.replaceAll("_", " ");
+                fieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+                errorHTML += '<p>Please Select '+ fieldName +'.</p>';
+            }   else {
+                console.log(fieldText)
+                if( fieldName == 'day_parts_id'){
+                    changeDetailNewTable(fieldText,1);
+                    dataValue('input[name="campaign_day_parts"]', fieldText );
+                } else {
+                    var demoName =  $(inputFrom).find('select option').filter(":selected").text()
+                    dataAppend('#summary .'+fieldName, demoName, 1, '');
+                }
+            }
+        }
+        return errorHTML;
+    }
+
+    function flightCheckbox(){
+        var errorHTML = '';
+        var inputFrom = $(".flighting-tab .flighting-table-box .day-checkbox-list .day-checkbox");
+        var dayChecked = inputFrom.find('input[type="checkbox"]:checked');
+        if( dayChecked.length == 0 ){
+            errorHTML = '<p>Please Select Any Once Checkbox.</p>';
+        }
+        inputFrom.each(function(){
+            var dayChecked = $(this).find('input[type="checkbox"]');
+            if(dayChecked.is(":checked")){
+                var dayValue = $(this).find('input[type="checkbox"]:checked').val();
+                var daySplitVal = $('input[name="'+dayValue+'_split"]').val();
+                if( daySplitVal == '' ){
+                    dayValue = dayValue.charAt(0).toUpperCase() + dayValue.slice(1);
+                    errorHTML = '<p>Please Enter '+dayValue+' Split Value</p>';
+                } else {
+                    var dayTimeVal = $('#day_parts_id').val();
+                    changeDetailNewTable(dayTimeVal,1)
+                }
+            }
+        });
+        return errorHTML;
+    }
+    
+    function showNotification(errorHTML, activeAttribute){
+        if( errorHTML == '' ){
+            $('ul.nav-tabs li a').each(function(){
+                $(this).removeClass('active').attr('aria-selected', false);
+            });
+            $('#'+activeAttribute).addClass('active').attr('aria-selected', true);;
+      
+            $('#content .tab-pane').each(function(){
+                $(this).removeClass('show').removeClass('active');
+            });
+            $('.'+activeAttribute+'-tab').addClass('show').addClass('active');
+            return true;
+        } else {
+            errorNotification(errorHTML);
+            return false;   
+        }
+    }
+
+    function createGenralForm(){
+        $("#edit_campaign .responsive-tabs .tab-btn").click(function(){
+            var activeAttribute = $(this).attr("attr-active");
+            if( activeAttribute == 'cpm-imp' ){
+                var errorHTML = '';
+                $(".general-tab .row .form-group").each(function(){
+                    errorHTML += inputType(this);
+                });
+                showNotification(errorHTML, activeAttribute);
+            } else if( activeAttribute == 'flighting'){
+                var errorHTML = '';
+                $(".cpm-imp-tab .row .form-group").each(function(){
+                    errorHTML += inputType(this);
+                });
+                showNotification(errorHTML, activeAttribute);
+            } else if( activeAttribute == 'summary'){
+                var errorHTML = '';
+                $(".flighting-tab .row .form-group").each(function(){
+                    errorHTML += inputType(this);
+                });
+                errorHTML += flightCheckbox();
+                //errorHTML += flightSplit(this);
+                showNotification(errorHTML, activeAttribute);
+            }
+        })
+    }
+
     getCampaginViewData();
     $("#deal_status").change(function(){
         var dealStatus = $(this).val();
@@ -105,6 +233,65 @@ $(document).ready(function(){
     });
     campaignGetId();
 
+     /* All Tab add Active Class */
+
+
+    /* Flight & Ad Length Section Start */ 
+    
+    $('input[name="ad_length"]').on('apply.daterangepicker', function(){
+        var startDate = $(this).val(); 
+        var adLengthOld = $('#ad_length_old').val(); 
+        dataAppend('#new_campaign_table .new-campaign-inv-length', startDate,1, adLengthOld);
+    });
+    /** Flight Change Event  */
+    $('#flight_start_date').on('apply.daterangepicker', function(){
+        var startDate = $(this).val(); 
+        console.log(startDate)
+        $('#summary .new-flight-stat-date-text').empty().text(startDate);
+        var campaignFlightStartDate = $('#campaign_flight_start_date').val();
+        dataAppend('#new_campaign_table .new-campaign-start-flight-date', startDate,1, campaignFlightStartDate);
+    });
+
+    $('input[name="flight_end_date"]').on('apply.daterangepicker', function(){
+        var endDate = $(this).val();
+        $('#summary .new-flight-end-date-text').empty().text(endDate);
+        var campaignFlightEndDate = $('#campaign_flight_end_date').val();
+        dataAppend('#new_campaign_table .new-campaign-end-flight-date', endDate,1,campaignFlightEndDate);
+    });
+    $('#edit_flight .day-split-checkbox-list .number-field input[type="number"]').change(function(){
+        var getDayOfSplit = $(this).val(); 
+        var onlyDay = $(this).attr('id').split("_split");
+        if( ( getDayOfSplit == 0 ) || ( getDayOfSplit == '' ) ){
+            $('#edit_flight .day-checkbox-list .form-check input[id="'+onlyDay[0]+'"]').attr('checked',false);
+        }else{
+            $('#edit_flight .day-checkbox-list .form-check input[id="'+onlyDay[0]+'"]').attr('checked',true);
+        }
+        var dayTime = $('#day_parts_id option:selected').text();
+        changeDetailNewTable(dayTime,1)
+    });
+
+    /* Flight Section End */
+
+    $('input[name="sunday_split"], input[name="monday_split"], input[name="tuesday_split"], input[name="wednesday_split"], input[name="thursday_split"], input[name="friday_split"], input[name="saturday_split"]').keypress(function (e) {    
+        var currentVal = $(this).val();
+        if( currentVal >= 100 ){
+            var changeValue = currentVal.substring(0,currentVal.length - 1);
+            $(this).val(changeValue);
+            return false;
+        }
+    });
+    $('input[name="days[]"]').change(function(){
+        $('.send-to-approval').prop("disabled", false);
+        var dayTimeVal = $('#campaign_day_time').val();
+        changeDetailNewTable(dayTimeVal,1)
+    });
+    
+    $('select:input[name="day_parts_id"]').change(function(){
+        $('.send-to-approval').prop("disabled", false);
+        var dayPartVal = $(this).find('option:selected').text();
+        changeDetailNewTable(dayPartVal,1)
+    });
+
     /*************************************************** Campaign page End  ***************************************************/
 
     /***********************************************  Edit Campaign page Start ***********************************************/
@@ -116,7 +303,8 @@ $(document).ready(function(){
         var thirdLastVal = splitArray[splitArray.length - 3];
         var secondLastVal = splitArray[splitArray.length - 2];
         var firstLastVal = splitArray[splitArray.length - 1];
-        if( thirdLastVal == 'campaign' && secondLastVal == 'edit' ){
+        if( ( currentUrl.indexOf('campaign') != -1 ) && ( currentUrl.indexOf('edit') != -1 )  ){
+            getNavigation();
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -297,80 +485,86 @@ $(document).ready(function(){
                 }
             });
         }
+
+        if( ( currentUrl.indexOf('campaign') != -1 ) && ( currentUrl.indexOf('create') != -1 ) ){
+            createGenralForm()
+            $('input[name="campaign_name"]').change(function(){
+                var campaignName =  $(this).val();
+                dataValue('input[name="campaign_name_change"]', campaignName );
+                $('input[name="campaign_name_change"]').addClass('bg-active');
+            });
+
+            $('input[type="text"].campaign_field').change(function(){
+                var campaignValue =  $(this).val();
+                var campaignName =  $(this).attr('name');
+                dataAppend('#summary .'+campaignName, campaignValue, 1, '');
+            });
+            $('.cpm-imp-tab #demographic_name').change(function(){
+                var demoName =  $(this).find('option:selected').text()
+                dataAppend('#summary .demo_name', demoName, 1, '');
+            });
+            $('.cpm-imp-tab input[name="cpm_ipm_impressions"]').change(function(){
+                dataAppend('#summary .impressions', $(this).val(), 1, '');
+            });
+            $('.cpm-imp-tab input[name="cpm_ipm_cpm"]').change(function(){
+                dataAppend('#summary .cpm', $(this).val(), 1, '');
+            });
+            $('.cpm-imp-tab input[name="cpm_ipm_demo_population"]').change(function(){
+                dataAppend('#summary .demo_population', $(this).val(), 1, '');
+            });
+            $('.cpm-imp-tab input[name="cpm_ipm_grp"]').change(function(){ 
+                dataAppend('#summary .grp', $(this).val(), 1, '');
+            });
+            $('input[name="ad_length"]').daterangepicker({
+                timePicker : true,
+                singleDatePicker:true,
+                timePicker24Hour : true,
+                timePickerIncrement : 1,
+                timePickerSeconds : true,
+                locale : {
+                    format : 'HH:mm:ss'
+                }
+            });
+            $('input[name="flight_start_date"]').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    format: 'MM/DD/YYYY',
+                },
+                singleDatePicker: true
+            }, (from_date) => {
+                $('input[name="flight_start_date"]').val(from_date.format('MM/DD/YYYY'));
+                dataValue('input[name="campaign_flight_start_date"]', from_date.format('MM/DD/YYYY') );
+                $('input[name="flight_end_date"]').daterangepicker({
+                    minDate:from_date.format('MM/DD/YYYY'),
+                    autoUpdateInput: false,
+                    locale: {
+                        format: 'MM/DD/YYYY',
+                    },
+                    singleDatePicker: true,
+                }, (from_date) => {
+                    $('input[name="flight_end_date"]').val(from_date.format('MM/DD/YYYY'));
+                    dataValue('input[name="campaign_flight_end_date"]', from_date.format('MM/DD/YYYY') );
+                    var endDate = from_date.format('MM/DD/YYYY');
+                    $('#summary .new-flight-end-date-text').empty().text(endDate);
+                    var campaignFlightEndDate = $('#campaign_flight_end_date').val();
+                    dataAppend('#new_campaign_table .new-campaign-end-flight-date', endDate,1,campaignFlightEndDate);
+                });
+            });
+
+            $('input[name="flight_end_date"]').daterangepicker({
+                autoUpdateInput: false,
+                locale: {
+                    format: 'MM/DD/YYYY',
+                },
+                singleDatePicker: true,
+            }, (from_date) => {
+                $('input[name="flight_end_date"]').val(from_date.format('MM/DD/YYYY'));
+            });
+            
+        } 
     }
 
     getCampaignDetail();
-
-    /* All Tab add Active Class */
-
-
-    /* Flight & Ad Length Section Start */ 
-    
-  /*  $('input[name="ad_length"]').daterangepicker({
-        timePicker : true,
-        singleDatePicker:true,
-        timePicker24Hour : true,
-        timePickerIncrement : 1,
-        timePickerSeconds : true,
-        locale : {
-            format : 'HH:mm:ss'
-        },
-    }).on('show.daterangepicker', function (ev, picker) {
-        picker.container.find(".calendar-table").hide();
-    });
-*/
-    $('input[name="ad_length"]').on('apply.daterangepicker', function(){
-        var startDate = $(this).val(); 
-        var adLengthOld = $('#ad_length_old').val(); 
-        dataAppend('#new_campaign_table .new-campaign-inv-length', startDate,1, adLengthOld);
-    });
-    /** Flight Change Event  */
-    $('#flight_start_date').on('apply.daterangepicker', function(){
-        var startDate = $(this).val(); 
-        $('#summary .new-flight-stat-date-text').empty().text(startDate);
-        var campaignFlightStartDate = $('#campaign_flight_start_date').val();
-        dataAppend('#new_campaign_table .new-campaign-start-flight-date', startDate,1, campaignFlightStartDate);
-    });
-
-    $('#flight_end_date').on('apply.daterangepicker', function(){
-        var endDate = $(this).val();
-        $('#summary .new-flight-end-date-text').empty().text(endDate);
-        var campaignFlightEndDate = $('#campaign_flight_end_date').val();
-        dataAppend('#new_campaign_table .new-campaign-end-flight-date', endDate,1,campaignFlightEndDate);
-    });
-    $('#edit_flight .day-split-checkbox-list .number-field input[type="number"]').change(function(){
-        var getDayOfSplit = $(this).val(); 
-        var onlyDay = $(this).attr('id').split("_split");
-        if( ( getDayOfSplit == 0 ) || ( getDayOfSplit == '' ) ){
-            $('#edit_flight .day-checkbox-list .form-check input[id="'+onlyDay[0]+'"]').attr('checked',false);
-        }else{
-            $('#edit_flight .day-checkbox-list .form-check input[id="'+onlyDay[0]+'"]').attr('checked',true);
-        }
-        var dayTime = $('#day_parts_id option:selected').text();
-        changeDetailNewTable(dayTime,1)
-    });
-
-    /* Flight Section End */
-
-    $('input[name="sunday_split"], input[name="monday_split"], input[name="tuesday_split"], input[name="wednesday_split"], input[name="thursday_split"], input[name="friday_split"], input[name="saturday_split"]').keypress(function (e) {    
-        var currentVal = $(this).val();
-        if( currentVal >= 100 ){
-            var changeValue = currentVal.substring(0,currentVal.length - 1);
-            $(this).val(changeValue);
-            return false;
-        }
-    });
-    $('input[name="days[]"]').change(function(){
-        $('.send-to-approval').prop("disabled", false);
-        var dayTimeVal = $('#campaign_day_time').val();
-        changeDetailNewTable(dayTimeVal,1)
-    });
-    
-    $('select:input[name="day_parts_id"]').change(function(){
-        $('.send-to-approval').prop("disabled", false);
-        var dayPartVal = $(this).find('option:selected').text();
-        changeDetailNewTable(dayPartVal,1)
-    });
 
     $("#edit_campaign").validate({
         submitHandler: function(form) {
@@ -387,7 +581,7 @@ $(document).ready(function(){
                 data: {_token: CSRF_TOKEN, data: getFormAllData},
                 success: function(response){
                     if( response.status == 0 ){
-                        errorNotification(response.message);
+                        errorNotification('<p>'+response.message+'</p>');
                     } else {
                         sucessNotification(response.message);
                         $(form).find(':input:disabled').each(function(){
@@ -412,23 +606,5 @@ $(document).ready(function(){
         window.location.href = URL+'/campaign';
     })
     /* Edit Campaign page End  */
-    $('.campaign-edit .tab-btn').click(function(e){
-        e.preventDefault();
-
-        var tabClass = $(this).attr('attr-active'); 
-
-        if( getFlightSplitCheck( this ) ){
-            $('ul.nav-tabs li a').each(function(){
-                $(this).removeClass('active').attr('aria-selected', false);
-            });
-            $('#'+tabClass).addClass('active').attr('aria-selected', true);;
-      
-            $('#content .tab-pane').each(function(){
-                $(this).removeClass('show').removeClass('active');
-            });
-            $('.'+tabClass+'-tab').addClass('show').addClass('active');
-        }
-       // getCampaignDetail();
-    });
       /***********************************************  Edit Campaign page End ***********************************************/
 });
