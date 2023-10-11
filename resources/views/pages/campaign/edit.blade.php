@@ -10,7 +10,11 @@
                         <div class="deal-view-box">
                             <div class="campaign-number-time-sec mb-3">
                                 <div class="campaign-number text-center">
+                                @if( $style == '' )
                                     <h4>Editing Campaign : {{ $campaign['campaign_payloads_id'] }} {{ $campaign['campaign_payloads_name'] }}</h4>
+                                @else
+                                    <h4>Viewing Campaign : {{ $campaign['campaign_payloads_id'] }} {{ $campaign['campaign_payloads_name'] }}</h4>
+                                 @endif;
                                 </div>
                                 <div class="campaign-date text-center">
                                     <span>Deal {{ $campaign['campaigns_deal_id'] }} Valid From date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_from'])) }} to Till date {{ date('m-d-Y', strtotime($campaign['campaigns_valid_to'])) }}  Deal Year {{ $campaign['campaigns_year'] }}</span>
